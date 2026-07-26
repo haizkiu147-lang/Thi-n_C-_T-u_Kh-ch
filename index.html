@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Phần Mềm Lập & Luận Quẻ Phong Thủy - Tâm Linh - Tình Duyên</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/lunar-javascript/lunar.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@300..500..700&family=Dancing+Script:wght@700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+        
+        body { font-family: 'Quicksand', sans-serif; background-color: #f5f0e1; margin: 0; padding: 0; }
+        .serif-title { font-family: 'Playfair Display', serif; }
+        .signature-font { font-family: 'Dancing Script', cursive; }
+        .document-text { font-family: 'Merriweather', serif; }
+        
+        .export-container { width: 100%; display: flex; justify-content: center; }
+        .la-que-bg {
+            background-color: #fdfaf2;
+            background-image: radial-gradient(#faf4df 1px, transparent 0), radial-gradient(#faf4df 1px, transparent 0);
+            background-size: 8px 8px; background-position: 0 0, 4px 4px;
+            border: 1px solid #d4af37; width: 100%; max-width: 900px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #c5a880; border-radius: 4px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .rainbow-text {
+            background: linear-gradient(to right, #ff0000, #ff7f00, #b2a800, #009900, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbowAnimation 6s linear infinite;
+            background-size: 400% 400%;
+        }
+        @keyframes rainbowAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .export-mode .no-print { display: none !important; }
+        .export-mode { box-shadow: none !important; border: none !important; }
+        
+        .result-formatted blockquote { border-left: 3px solid #d4af37; padding-left: 10px; font-style: italic; color: #665; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // ====================================================================================
+        // MAI HOA LOGIC ENGINE
+        // ====================================================================================
+        const EngineLuanMaiHoa = (category, theElement, dungElement) => {
+            let relationship = '';
+            if (theElement === dungElement) relationship = 'TY_HOA';
+            else if (ELEMENTS_RELATION[theElement].sinh === dungElement) relationship = 'THE_SINH_DUNG';
+            else if (ELEMENTS_RELATION[dungElement].sinh === theElement) relationship = 'DUNG_SINH_THE';
+            else if (ELEMENTS_RELATION[theElement].khac === dungElement) relationship = 'THE_KHAC_DUNG';
+            else if (ELEMENTS_RELATION[dungElement].khac === theElement) relationship = 'DUNG_KHAC_THE';
+
+            let ketLuan = '';
+            
+            switch (category) {
+                case 'cautai':
+                    ketLuan += `► **LỜI BÀN VỀ CẦU TÀI / KINH DOANH:**\n`;
+                    if (relationship === 'TY_HOA') ketLuan += `- 🌟 **Tỷ Hòa (Hòa Hợp):** Mưu cầu tài lộc thuận lợi. Nên hợp tác làm ăn sẽ có kết quả tốt đẹp, đôi bên cùng có lợi.\n`;
+                    else if (relationship === 'DUNG_SINH_THE') ketLuan += `- 💰 **Dụng sinh Thể (Đại Cát):** Rất tốt! Lợi nhuận kinh doanh khấm khá, tiền bạc dễ dàng thu về, có quý nhân phù trợ mang tài lộc tới.\n`;
+                    else if (relationship === 'THE_KHAC_DUNG') ketLuan += `- ⚖️ **Thể khắc Dụng (Gian Nan Đắc Lợi):** Cầu tài có hy vọng nhưng phải vất vả lao tâm khổ tứ, hao tổn trí lực thì mới kiếm được tiền.\n`;
+                    else if (relationship === 'THE_SINH_DUNG') ketLuan += `- 💦 **Thể sinh Dụng (Hao Tài):** Bất lợi. Chi phí đầu tư ra nhiều hơn thu vào, dễ hao tài tốn của, làm ăn mệt mỏi mà lợi nhuận không đáng kể.\n`;
+                    else if (relationship === 'DUNG_KHAC_THE') ketLuan += `- ❌ **Dụng khắc Thể (Đại Hung):** Rất cấm kỵ! Cầu tài thất bại, dễ vỡ nợ, thua lỗ hoặc bị tiểu nhân lừa gạt, đoạt tài sản.\n`;
+                    break;
+
+                case 'tinhduyen':
+                    ketLuan += `► **LỜI BÀN VỀ TÌNH DUYÊN / HÔN NHÂN:**\n`;
+                    if (relationship === 'TY_HOA') ketLuan += `- 🌟 **Tỷ Hòa (Cát):** Tâm đầu ý hợp, môn đăng hộ đối. Tình cảm đôi bên gắn bó êm đềm, thuận lợi tiến tới lâu dài.\n`;
+                    else if (relationship === 'DUNG_SINH_THE') ketLuan += `- 💞 **Dụng sinh Thể (Đại Cát):** Rất tốt. Đối phương yêu thương, quan tâm và mang lại sự tốt lành cho mình. Hôn nhân hạnh phúc.\n`;
+                    else if (relationship === 'THE_KHAC_DUNG') ketLuan += `- ⚖️ **Thể khắc Dụng (Chế Ngự):** Tình cảm có phần áp đặt. Bản thân thường xuyên muốn kiểm soát, lấn lướt đối phương, lâu dài dễ sinh rạn nứt.\n`;
+                    else if (relationship === 'THE_SINH_DUNG') ketLuan += `- 💦 **Thể sinh Dụng (Hao Tâm):** Mình yêu thương, chiều chuộng và nhẫn nhịn đối phương rất nhiều, cho đi nhiều hơn nhận lại, chịu nhiều thiệt thòi.\n`;
+                    else if (relationship === 'DUNG_KHAC_THE') ketLuan += `- ❌ **Dụng khắc Thể (Phá Duyên):** Hung. Có sự khắc khẩu mạnh mẽ, gia đình đối phương phản đối hoặc đối phương gây tổn thương tột cùng. Khó thành tựu.\n`;
+                    break;
+
+                case 'phongthuy':
+                case 'tamlinh':
+                case 'tama':
+                    ketLuan += `► **LỜI BÀN VỀ PHONG THỦY / TÂM LINH:**\n`;
+                    if (relationship === 'TY_HOA') ketLuan += `- 🌟 **Tỷ Hòa:** Khí trường êm ấm, bình an. Không có xung sát hay hiện tượng tâm linh xấu quấy phá. Nếu là mồ mả thì yên ổn.\n`;
+                    else if (relationship === 'DUNG_SINH_THE') ketLuan += `- 🛡️ **Dụng sinh Thể:** Cát lợi. Đất đai có sinh khí, được thần linh bảo hộ. Điềm báo linh ứng điềm tốt, mang lại sự hưng vượng cho gia đạo.\n`;
+                    else if (relationship === 'THE_KHAC_DUNG') ketLuan += `- ⚖️ **Thể khắc Dụng:** Gia chủ tuy gặp đôi chút bất an nhưng bản mệnh mạnh, đủ sức trấn áp hung khí. Mọi sự dần dần tự hóa giải.\n`;
+                    else if (relationship === 'THE_SINH_DUNG') ketLuan += `- 💦 **Thể sinh Dụng:** Đất đai hoặc ngôi nhà bị tiết khí, ở lâu người dễ sinh mệt mỏi, sinh khí suy giảm. Cần cải tạo phong thủy.\n`;
+                    else if (relationship === 'DUNG_KHAC_THE') ketLuan += `- ❌ **Dụng khắc Thể:** Rất nguy hiểm! Nếu xem phong thủy thì phạm sát khí nặng. Xem điềm báo/tâm linh thì đây là sự quấy nhiễu mạnh của vong linh, tà ma, có thể gây họa. Cần sớm mời thầy giải hoặc hóa giải.\n`;
+                    break;
+                
+                default:
+                    ketLuan += `► **LỜI BÀN TỔNG QUAN TỪ QUÁI TƯỢNG:**\n`;
+                    if (relationship === 'TY_HOA') ketLuan += `- 🌟 **Tỷ Hòa:** Việc êm xuôi, dễ thành công nhờ sự đồng thuận.\n`;
+                    else if (relationship === 'DUNG_SINH_THE') ketLuan += `- 🌟 **Dụng sinh Thể:** Rất thuận lợi, đắc nhân tâm, gặp quý nhân phù trợ.\n`;
+                    else if (relationship === 'THE_KHAC_DUNG') ketLuan += `- ⚖️ **Thể khắc Dụng:** Sự việc tuy thành nhưng gian nan, hao tâm tổn trí.\n`;
+                    else if (relationship === 'THE_SINH_DUNG') ketLuan += `- 💦 **Thể sinh Dụng:** Việc làm hao tài tốn sức, kết quả không như ý.\n`;
+                    else if (relationship === 'DUNG_KHAC_THE') ketLuan += `- ❌ **Dụng khắc Thể:** Gian nan vô vàn, mưu sự thất bại, dễ vướng họa.\n`;
+                    break;
+            }
+
+            return ketLuan;
+        };
+
+        // ====================================================================================
+        // COMPONENT RENDER TEXT FORMATTED
+        // ====================================================================================
+        const RenderFormattedText = ({ text }) => {
+            if (!text) return null;
+            
+            const lines = text.split('\n');
+            return (
+                <div className="w-full p-4 border border-amber-300 rounded bg-white document-text text-[12px] sm:text-[13px] leading-relaxed result-formatted text-gray-900 shadow-inner">
+                    {lines.map((line, index) => {
+                        if (line.trim() === '') return <div key={index} className="h-3"></div>;
+
+                        const parseBold = (str) => {
+                            const parts = str.split(/(\*\*.*?\*\*)/g);
+                            return parts.map((part, i) => {
+                                if (part.startsWith('**') && part.endsWith('**')) {
+                                    return <strong key={i} className="text-amber-900">{part.slice(2, -2)}</strong>;
+                                }
+                                return part;
+                            });
+                        };
+
+                        if (line.startsWith('[') && line.endsWith(']')) {
+                            return <h3 key={index} className="text-center font-bold text-base text-[#a91d1d] uppercase mb-1">{line.slice(1, -1)}</h3>;
+                        }
+                        if (line.startsWith('===')) return <div key={index} className="w-full h-px bg-amber-200 my-2"></div>;
+                        if (line.startsWith('►')) return <div key={index} className="font-bold text-amber-800 text-sm mt-3 mb-1">{parseBold(line)}</div>;
+                        if (line.startsWith('>')) return <blockquote key={index} className="mt-4 border-l-4 border-[#d4af37] pl-3 italic text-gray-600 font-medium bg-amber-50 py-2 rounded-r-md">{parseBold(line.substring(1).trim())}</blockquote>;
+                        if (line.trim().startsWith('- ')) {
+                            return (
+                                <div key={index} className="flex gap-2 mb-1.5 items-start">
+                                    <span className="text-amber-600 font-bold mt-0.5">•</span>
+                                    <span className="flex-1">{parseBold(line.substring(2))}</span>
+                                </div>
+                            );
+                        }
+                        if (line.trim().startsWith('+ ')) {
+                            return (
+                                <div key={index} className="flex gap-2 mb-1 items-start ml-4">
+                                    <span className="text-emerald-600 font-bold mt-0.5">◦</span>
+                                    <span className="flex-1 italic text-gray-700">{parseBold(line.substring(2))}</span>
+                                </div>
+                            );
+                        }
+
+                        return <div key={index} className="mb-1">{parseBold(line)}</div>;
+                    })}
+                </div>
+            );
+        };
+
+
+        // ====================================================================================
+        // KIẾN THỨC NỀN TẢNG
+        // ====================================================================================
+        const TR_SINH_MAP = {
+            "Mộc": { "Hợi": "Trường Sinh", "Tý": "Mộc Dục", "Sửu": "Quan Đới", "Dần": "Lâm Quan", "Mão": "Đế Vượng", "Thìn": "Suy", "Tỵ": "Bệnh", "Ngọ": "Tử", "Mùi": "Mộ", "Thân": "Tuyệt", "Dậu": "Thai", "Tuất": "Dưỡng" },
+            "Hỏa": { "Dần": "Trường Sinh", "Mão": "Mộc Dục", "Thìn": "Quan Đới", "Tỵ": "Lâm Quan", "Ngọ": "Đế Vượng", "Mùi": "Suy", "Thân": "Bệnh", "Dậu": "Tử", "Tuất": "Mộ", "Hợi": "Tuyệt", "Tý": "Thai", "Sửu": "Dưỡng" },
+            "Thổ": { "Thân": "Trường Sinh", "Dậu": "Mộc Dục", "Tuất": "Quan Đới", "Hợi": "Lâm Quan", "Tý": "Đế Vượng", "Sửu": "Suy", "Dần": "Bệnh", "Mão": "Tử", "Thìn": "Mộ", "Tỵ": "Tuyệt", "Ngọ": "Thai", "Mùi": "Dưỡng" },
+            "Kim": { "Tỵ": "Trường Sinh", "Ngọ": "Mộc Dục", "Mùi": "Quan Đới", "Thân": "Lâm Quan", "Dậu": "Đế Vượng", "Tuất": "Suy", "Hợi": "Bệnh", "Tý": "Tử", "Sửu": "Mộ", "Dần": "Tuyệt", "Mão": "Thai", "Thìn": "Dưỡng" },
+            "Thủy": { "Thân": "Trường Sinh", "Dậu": "Mộc Dục", "Tuất": "Quan Đới", "Hợi": "Lâm Quan", "Tý": "Đế Vượng", "Sửu": "Suy", "Dần": "Bệnh", "Mão": "Tử", "Thìn": "Mộ", "Tỵ": "Tuyệt", "Ngọ": "Thai", "Mùi": "Dưỡng" }
+        };
+
+        const DIA_CHI_XUNG = {'Tý':'Ngọ', 'Ngọ':'Tý', 'Sửu':'Mùi', 'Mùi':'Sửu', 'Dần':'Thân', 'Thân':'Dần', 'Mão':'Dậu', 'Dậu':'Mão', 'Thìn':'Tuất', 'Tuất':'Thìn', 'Tỵ':'Hợi', 'Hợi':'Tỵ'};
+        const DIA_CHI_HOP = {'Tý':'Sửu', 'Sửu':'Tý', 'Dần':'Hợi', 'Hợi':'Dần', 'Mão':'Tuất', 'Tuất':'Mão', 'Thìn':'Dậu', 'Dậu':'Thìn', 'Tỵ':'Thân', 'Thân':'Tỵ', 'Ngọ':'Mùi', 'Mùi':'Ngọ'};
+        
+        const BAT_QUAI = [
+            { id: 0, name: 'Càn', symbol: '☰', binary: [1, 1, 1], element: 'Kim', number: 1 },
+            { id: 1, name: 'Đoài', symbol: '☱', binary: [1, 1, 0], element: 'Kim', number: 2 },
+            { id: 2, name: 'Ly', symbol: '☲', binary: [1, 0, 1], element: 'Hỏa', number: 3 },
+            { id: 3, name: 'Chấn', symbol: '☳', binary: [1, 0, 0], element: 'Mộc', number: 4 },
+            { id: 4, name: 'Tốn', symbol: '☴', binary: [0, 1, 1], element: 'Mộc', number: 5 },
+            { id: 5, name: 'Khảm', symbol: '☵', binary: [0, 1, 0], element: 'Thủy', number: 6 },
+            { id: 6, name: 'Cấn', symbol: '☶', binary: [0, 0, 1], element: 'Thổ', number: 7 },
+            { id: 7, name: 'Khôn', symbol: '☷', binary: [0, 0, 0], element: 'Thổ', number: 8 }
+        ];
+
+        const findTrigramFromBinary = (binArr) => {
+            const t = BAT_QUAI.find(b => b.binary[0] === binArr[0] && b.binary[1] === binArr[1] && b.binary[2] === binArr[2]);
+            return t ? t.id : 0;
+        };
+
+        const THIEN_CAN = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+        const DIA_CHI = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+        const TIET_KHI_LIST = ['Lập Xuân', 'Vũ Thủy', 'Kinh Trập', 'Xuân Phân', 'Thanh Minh', 'Cốc Vũ', 'Lập Hạ', 'Tiểu Mãn', 'Mang Chủng', 'Hạ Chí', 'Tiểu Thử', 'Đại Thử', 'Lập Thu', 'Xử Thử', 'Bạch Lộ', 'Thu Phân', 'Hàn Lộ', 'Sương Giáng', 'Lập Đông', 'Tiểu Tuyết', 'Đại Tuyết', 'Đông Chí', 'Tiểu Hàn', 'Đại Hàn', 'Không dùng/Khác'];
+        
+        const CHI_NGU_HANH = { 'Tý': 'Thủy', 'Hợi': 'Thủy', 'Dần': 'Mộc', 'Mão': 'Mộc', 'Tỵ': 'Hỏa', 'Ngọ': 'Hỏa', 'Sửu': 'Thổ', 'Thìn': 'Thổ', 'Mùi': 'Thổ', 'Tuất': 'Thổ', 'Thân': 'Kim', 'Dậu': 'Kim' };
+
+        const ELEMENTS_RELATION = {
+            'Kim': { sinh: 'Thủy', khac: 'Mộc', dong: 'Kim' },
+            'Thủy': { sinh: 'Mộc', khac: 'Hỏa', dong: 'Thủy' },
+            'Mộc': { sinh: 'Hỏa', khac: 'Thổ', dong: 'Mộc' },
+            'Hỏa': { sinh: 'Thổ', khac: 'Kim', dong: 'Hỏa' },
+            'Thổ': { sinh: 'Kim', khac: 'Thủy', dong: 'Thổ' }
+        };
+
+        const NAP_GIAP = {
+            0: { noi: ['Giáp Tý', 'Giáp Dần', 'Giáp Thìn'], ngoai: ['Nhâm Ngọ', 'Nhâm Thân', 'Nhâm Tuất'] },
+            1: { noi: ['Đinh Tỵ', 'Đinh Mão', 'Đinh Sửu'], ngoai: ['Đinh Hợi', 'Đinh Dậu', 'Đinh Mùi'] },
+            2: { noi: ['Kỷ Mão', 'Kỷ Sửu', 'Kỷ Hợi'], ngoai: ['Kỷ Dậu', 'Kỷ Mùi', 'Kỷ Tỵ'] },
+            3: { noi: ['Canh Tý', 'Canh Dần', 'Canh Thìn'], ngoai: ['Canh Ngọ', 'Canh Thân', 'Canh Tuất'] },
+            4: { noi: ['Tân Sửu', 'Tân Hợi', 'Tân Dậu'], ngoai: ['Tân Mùi', 'Tân Tỵ', 'Tân Mão'] },
+            5: { noi: ['Mậu Dần', 'Mậu Thìn', 'Mậu Ngọ'], ngoai: ['Mậu Thân', 'Mậu Tuất', 'Mậu Tý'] },
+            6: { noi: ['Bính Thìn', 'Bính Ngọ', 'Bính Thân'], ngoai: ['Bính Tuất', 'Bính Tý', 'Bính Dần'] },
+            7: { noi: ['Ất Mùi', 'Ất Tỵ', 'Ất Mão'], ngoai: ['Quý Sửu', 'Quý Hợi', 'Quý Dậu'] }
+        };
+
+        const LUC_THU_KHOI = { 'Giáp': 0, 'Ất': 0, 'Bính': 1, 'Đinh': 1, 'Mậu': 2, 'Kỷ': 3, 'Canh': 4, 'Tân': 4, 'Nhâm': 5, 'Quý': 5 };
+        const LUC_THU_LIST = ['Thanh Long', 'Chu Tước', 'Câu Trần', 'Đằng Xà', 'Bạch Hổ', 'Huyền Vũ'];
+
+        const HEXAGRAM_DATABASE = {
+            "0_0": ["Thuần Càn", "Càn", 6, "HẠN MIÊU ĐẮC VŨ"], "0_1": ["Thiên Trạch Lý", "Cấn", 5, "HỔ KHẨU THỰC CAM"], "0_2": ["Thiên Hỏa Đồng Nhân", "Ly", 3, "TIÊN KHÓA HẬU HỶ"], "0_3": ["Thiên Lôi Vô Vọng", "Tốn", 4, "VÔ VỌNG CHI TAI"], "0_4": ["Thiên Phong Cấu", "Càn", 1, "NHƯ DIỆP ĐIÊU LINH"], "0_5": ["Thiên Thủy Tụng", "Ly", 4, "TIỂU NHÂN HÃM HẠI"], "0_6": ["Thiên Sơn Độn", "Càn", 2, "NÙNG VÂN GIÀ LỘ"], "0_7": ["Thiên Địa Bĩ", "Càn", 3, "HỔ LẠC HÃM TỈNH"],
+            "1_0": ["Trạch Thiên Quải", "Khôn", 5, "NƯỚC TRÀN BỜ ĐÊ"], "1_1": ["Thuần Đoài", "Đoài", 6, "LƯỠNG HỶ TRÙNG PHÙNG"], "1_2": ["Trạch Hỏa Cách", "Khảm", 4, "HẠN MIÊU ĐẮC VŨ"], "1_3": ["Trạch Lôi Tùy", "Chấn", 3, "SUY ĐỒ ĐẮC KIM"], "1_4": ["Trạch Phong Đại Quá", "Chấn", 4, "CỘT NHÀ LUNG LAY"], "1_5": ["Trạch Thủy Khốn", "Đoài", 1, "NGHÈO KHÓ GIAN NAN"], "1_6": ["Trạch Sơn Hàm", "Đoài", 3, "HỶ KHÍ LÂM MÔN"], "1_7": ["Trạch Địa Tụy", "Đoài", 2, "BỒN KHÁNH HỶ SỰ"],
+            "2_0": ["Hỏa Thiên Đại Hữu", "Càn", 3, "QUY HỒN THU HOẠCH"], "2_1": ["Hỏa Trạch Khuê", "Cấn", 4, "LY TÁN BẤT ĐỒNG"], "2_2": ["Thuần Ly", "Ly", 6, "TIÊN KHÓA HẬU DỄ"], "2_3": ["Hỏa Lôi Phệ Hạp", "Tốn", 5, "XUÂN LỘC ANH ĐÀO"], "2_4": ["Hỏa Phong Đỉnh", "Ly", 2, "CÚC HOA TOÀN THỊNH"], "2_5": ["Hỏa Thủy Vị Tế", "Ly", 3, "TIỂU NHÂN HÃM HẠI"], "2_6": ["Hỏa Sơn Lữ", "Ly", 1, "SƠN DÃ KÝ KHÁCH"], "2_7": ["Hỏa Địa Tấn", "Càn", 4, "DU HỒN THĂNG TIẾN"],
+            "3_0": ["Lôi Thiên Đại Tráng", "Khôn", 4, "UY TRẤN GIANG SƠN"], "3_1": ["Lôi Trạch Quy Muội", "Đoài", 3, "QUY MUỘI SAI LẦM"], "3_2": ["Lôi Hỏa Phong", "Khảm", 5, "CỔ NHÂN KIẾN ĐÍCH"], "3_3": ["Thuần Chấn", "Chấn", 6, "HOÀNG LONG ĐỘC BỘ"], "3_4": ["Lôi Phong Hằng", "Chấn", 3, "TIÊN PHÁT CHẾ NHÂN"], "3_5": ["Lôi Thủy Giải", "Chấn", 2, "NGŨ LỘ THÔNG THƯƠNG"], "3_6": ["Lôi Sơn Tiểu Quá", "Đoài", 5, "PHI ĐIỂU DI ÂM"], "3_7": ["Lôi Địa Dự", "Chấn", 1, "HOAN HỶ ĐẮC THỜI"],
+            "4_0": ["Phong Thiên Tiểu Súc", "Tốn", 1, "MẬT VÂN BẤT VŨ"], "4_1": ["Phong Trạch Trung Phu", "Cấn", 4, "HẠN LỘ PHÙNG CAM"], "4_2": ["Phong Hỏa Gia Nhân", "Tốn", 2, "XUÂN GIÓ ẤM ÁP"], "4_3": ["Phong Lôi Ích", "Tốn", 3, "XUÂN PHONG ĐẮC Ý"], "4_4": ["Thuần Tốn", "Tốn", 6, "GIÓ ĐÔNG THỔI NHẸ"], "4_5": ["Phong Thủy Hoán", "Ly", 5, "MƯA PHÙN TAN BĂNG"], "4_6": ["Phong Sơn Tiệm", "Cấn", 3, "HẠN LỘ PHÙNG CAM"], "4_7": ["Phong Địa Quan", "Càn", 4, "HẠN BỒNG PHÙNG HẠC"],
+            "5_0": ["Thủy Thiên Nhu", "Khôn", 4, "MINH VÂN ĐỘC QUY"], "5_1": ["Thủy Trạch Tiết", "Khảm", 1, "KHỔ TÂM ĐẮC LỘC"], "5_2": ["Thủy Hỏa Ký Tế", "Khảm", 3, "CÔNG THÀNH DANH TOẠI"], "5_3": ["Thủy Lôi Truân", "Khảm", 2, "MÃ ĐÁO KHỞI TRÌNH"], "5_4": ["Thủy Phong Tỉnh", "Chấn", 5, "GIẾNG KHÔ GẶP MƯA"], "5_5": ["Thuần Khảm", "Khảm", 6, "XUYÊN TRUNG ĐẮC NGỌC"], "5_6": ["Thủy Sơn Kiển", "Đoài", 4, "TẠO HÓA THỬ LÒNG"], "5_7": ["Thủy Địa Tỷ", "Khôn", 3, "ĐỊA THỦY GIAO BAN"],
+            "6_0": ["Sơn Thiên Đại Súc", "Cấn", 2, "TÍCH LŨY THÀNH ĐẠI"], "6_1": ["Sơn Trạch Tổn", "Cấn", 3, "HẠN KHÔ PHÙNG LỘC"], "6_2": ["Sơn Hỏa Bí", "Cấn", 1, "HỶ KHÍ LÂM MÔN"], "6_3": ["Sơn Lôi Di", "Tốn", 4, "DI HÌNH HOÁN CỐT"], "6_4": ["Sơn Phong Cổ", "Tốn", 5, "SỬA SAI PHỤC HƯNG"], "6_5": ["Sơn Thủy Mông", "Ly", 4, "SƯƠNG MÙ CHE TRĂNG"], "6_6": ["Thuần Cấn", "Cấn", 6, "SƠN CAO LỘC TRÚC"], "6_7": ["Sơn Địa Bác", "Càn", 5, "OANH THỬ LẠC ĐÊ"],
+            "7_0": ["Địa Thiên Thái", "Khảm", 3, "TAM DƯƠNG KHAI THÁI"], "7_1": ["Địa Trạch Lâm", "Khôn", 2, "HỶ SỰ LÂM MÔN"], "7_2": ["Địa Hỏa Minh Di", "Khảm", 4, "KÍNH LÝ TÀNG HOA"], "7_3": ["Địa Lôi Phục", "Khôn", 1, "XUÂN ĐÔNG QUY LAI"], "7_4": ["Địa Phong Thăng", "Chấn", 4, "BƯỚC LÊN MÂY XANH"], "7_5": ["Địa Thủy Sư", "Khảm", 5, "XUÂN ĐIỂU XUẤT CỐC"], "7_6": ["Địa Sơn Khiêm", "Đoài", 5, "MÃN VI TỔN, KHIÊM THỤ ÍCH"], "7_7": ["Thuần Khôn", "Khôn", 6, "ĐỊA THỪA VẠN VẬT"]
+        };
+
+        const CUNG_ELEMENTS = { "Càn": "Kim", "Đoài": "Kim", "Ly": "Hỏa", "Chấn": "Mộc", "Tốn": "Mộc", "Khảm": "Thủy", "Cấn": "Thổ", "Khôn": "Thổ" };
+
+        const CATEGORIES = [
+            { id: 'cautai', name: 'Cầu Tài - Kinh Doanh', items: [
+                { name: "Cầu Tài chung, buôn bán", type: "CT_CHUNG", dungThan: "Thê Tài", icon: "fa-sack-dollar" },
+                { name: "Hợp tác làm ăn, công việc", type: "CT_HOPTAC", dungThan: "Thê Tài", icon: "fa-handshake" },
+                { name: "Đầu tư, vay mượn, đòi nợ", type: "CT_DAUTU", dungThan: "Thê Tài", icon: "fa-money-bill-trend-up" }
+            ]},
+            { id: 'tinhduyen', name: 'Tình Duyên - Hôn Nhân', items: [
+                { name: "Nam xem Tình Duyên, lấy vợ", type: "TD_NAM", dungThan: "Thê Tài", icon: "fa-mars" },
+                { name: "Nữ xem Tình Duyên, lấy chồng", type: "TD_NU", dungThan: "Quan Quỷ", icon: "fa-venus" },
+                { name: "Hỏi chung về Tình cảm, Gia đạo", type: "TD_CHUNG", dungThan: "Ứng", icon: "fa-rings-wedding" }
+            ]},
+            { id: 'phongthuy', name: 'Phong Thủy Âm/Dương', items: [
+                { name: "Tổng quan hướng nhà, Trạch vận", type: "DT_TONG", dungThan: "Phụ Mẫu", icon: "fa-house-chimney" },
+                { name: "Nền nhà, Khí đất, Móng nhà", type: "DT_NENNHA", dungThan: "Phụ Mẫu", icon: "fa-layer-group" },
+                { name: "Cửa chính, Cổng ra vào", type: "DT_CUA", dungThan: "Phụ Mẫu", icon: "fa-door-open" },
+                { name: "Mở cửa hàng, Khai trương", type: "DT_MOCUAHANG", dungThan: "Thê Tài", icon: "fa-store" },
+                { name: "Phòng bếp & Bếp nấu (Tài lộc)", type: "DT_BEP", dungThan: "Thê Tài", icon: "fa-fire-burner" },
+                { name: "Tình trạng mộ phần, Huyệt vị", type: "AT_MOPHAN", dungThan: "Phụ Mẫu", icon: "fa-monument" },
+                { name: "Động mồ mả, Long mạch", type: "AT_DONGMO", dungThan: "Phụ Mẫu", icon: "fa-skull" }
+            ]},
+            { id: 'tamlinh', name: 'Điềm Báo - Giấc Mơ', items: [
+                { name: "Giải mã giấc mơ, Điềm báo kỳ lạ", type: "TL_GIACMO", dungThan: "Quan Quỷ", icon: "fa-cloud-moon" },
+                { name: "Bị bóng đè, Ác mộng", type: "TL_GIACMO", dungThan: "Quan Quỷ", icon: "fa-bed-pulse" }
+            ]},
+            { id: 'tama', name: 'Tà Ma - Vong Linh', items: [
+                { name: "Nhà có tiếng động, Tà ma trêu", type: "TL_TAMA", dungThan: "Quan Quỷ", icon: "fa-ghost" },
+                { name: "Hiện tượng vong nhập, Trừ tà", type: "TL_VONGNHAP", dungThan: "Quan Quỷ", icon: "fa-hat-wizard" },
+                { name: "Ốm đau lâu ngày do bệnh âm", type: "TL_BENHAM", dungThan: "Quan Quỷ", icon: "fa-user-injured" }
+            ]}
+        ];
+
+        // TIỆN ÍCH LỤC HÀO
+        function layTienChi(tenDayChi) { return CHI_NGU_HANH[tenDayChi]; }
+
+        const getElementColor = (element) => {
+            switch(element) {
+                case 'Kim': return 'text-amber-600'; case 'Mộc': return 'text-emerald-700'; 
+                case 'Thủy': return 'text-blue-700'; case 'Hỏa': return 'text-red-600'; 
+                case 'Thổ': return 'text-amber-900'; default: return 'text-gray-800';
+            }
+        };
+
+        const getVuongSuyColor = (vs) => {
+            if (vs === "Vượng") return "text-red-600 font-extrabold";
+            if (vs === "Tướng") return "text-pink-600 font-bold";
+            if (vs === "Hưu") return "text-emerald-700 font-medium";
+            if (vs === "Tù") return "text-amber-800 font-medium";
+            if (vs === "Tử") return "text-gray-900 font-extrabold";
+            return "text-gray-600";
+        };
+
+        function getLucThan(cungNguHanH, haoNguHanh) {
+            if (cungNguHanH === haoNguHanh) return 'Huynh Đệ';
+            if (ELEMENTS_RELATION[cungNguHanH].sinh === haoNguHanh) return 'Tử Tôn';
+            if (ELEMENTS_RELATION[cungNguHanH].khac === haoNguHanh) return 'Thê Tài';
+            if (ELEMENTS_RELATION[haoNguHanh].sinh === cungNguHanH) return 'Phụ Mẫu';
+            if (ELEMENTS_RELATION[haoNguHanh].khac === cungNguHanH) return 'Quan Quỷ';
+            return '';
+        }
+
+        function getPhuTroThan(dungLucThan) {
+            const roles = { nguyen: '', ky: '', cuu: '' };
+            if (dungLucThan === "Thê Tài") { roles.nguyen = "Tử Tôn"; roles.ky = "Huynh Đệ"; roles.cuu = "Phụ Mẫu"; }
+            else if (dungLucThan === "Quan Quỷ") { roles.nguyen = "Thê Tài"; roles.ky = "Tử Tôn"; roles.cuu = "Huynh Đệ"; }
+            else if (dungLucThan === "Phụ Mẫu") { roles.nguyen = "Quan Quỷ"; roles.ky = "Thê Tài"; roles.cuu = "Tử Tôn"; }
+            else if (dungLucThan === "Tử Tôn") { roles.nguyen = "Huynh Đệ"; roles.ky = "Phụ Mẫu"; roles.cuu = "Quan Quỷ"; }
+            else if (dungLucThan === "Huynh Đệ") { roles.nguyen = "Phụ Mẫu"; roles.ky = "Quan Quỷ"; roles.cuu = "Thê Tài"; }
+            return roles;
+        }
+
+        const VAI_TRO_BADGE_STYLE = {
+            "Dụng": "bg-red-100 text-red-700 border-red-300",
+            "Nguyên": "bg-blue-100 text-blue-700 border-blue-300",
+            "Kỵ": "bg-amber-100 text-amber-700 border-amber-300",
+            "Cừu": "bg-purple-100 text-purple-700 border-purple-300",
+            "Nhàn": "bg-emerald-100 text-emerald-700 border-emerald-300"
+        };
+
+        function getVaiTroLucThan(lucThan, dungThan) {
+            if (!lucThan || !dungThan) return null;
+            if (dungThan === "Thế" || dungThan === "Ứng") return null;
+            if (lucThan === dungThan) return "Dụng";
+            const roles = getPhuTroThan(dungThan);
+            if (!roles || !roles.nguyen) return null;
+            if (lucThan === roles.nguyen) return "Nguyên";
+            if (lucThan === roles.ky) return "Kỵ";
+            if (lucThan === roles.cuu) return "Cừu";
+            return "Nhàn";
+        }
+
+        function anLinhHao(trigramId, stepIdx) {
+            const isUpper = stepIdx >= 3;
+            const subIdx = stepIdx % 3;
+            const napArray = isUpper ? NAP_GIAP[trigramId].ngoai : NAP_GIAP[trigramId].noi;
+            const parts = napArray[subIdx].split(' ');
+            return { can: parts[0], chi: parts[1], element: CHI_NGU_HANH[parts[1]] || "Kim" };
+        }
+
+        function timPhucThan(cungName, chuLines) {
+            const cungElement = CUNG_ELEMENTS[cungName];
+            const neededLucThan = ["Huynh Đệ", "Tử Tôn", "Thê Tài", "Quan Quỷ", "Phụ Mẫu"];
+            const ownedLucThan = chuLines.map(l => l.lucThan);
+            const missing = neededLucThan.filter(t => !ownedLucThan.includes(t));
+            if (missing.length === 0) return {};
+
+            const masterTrigram = BAT_QUAI.find(b => b.name === cungName);
+            if (!masterTrigram) return {};
+
+            const mapPhuc = {};
+            for (let idx = 0; idx < 6; idx++) {
+                const isUpper = idx >= 3;
+                const subIdx = idx % 3;
+                const napArray = isUpper ? NAP_GIAP[masterTrigram.id].ngoai : NAP_GIAP[masterTrigram.id].noi;
+                const parts = napArray[subIdx].split(' ');
+                const element = CHI_NGU_HANH[parts[1]];
+                const lucThan = getLucThan(cungElement, element);
+                
+                if (missing.includes(lucThan)) {
+                    mapPhuc[idx] = { lucThan, can: parts[0], chi: parts[1], element };
+                }
+            }
+            return mapPhuc;
+        }
+
+        const checkVuongSuy = (haoElement, mChi) => {
+            const monthEl = CHI_NGU_HANH[mChi];
+            if (haoElement === monthEl) return "Vượng"; 
+            if (ELEMENTS_RELATION[monthEl].sinh === haoElement) return "Tướng"; 
+            if (ELEMENTS_RELATION[haoElement].sinh === monthEl) return "Hưu"; 
+            if (ELEMENTS_RELATION[haoElement].khac === monthEl) return "Tù"; 
+            if (ELEMENTS_RELATION[monthEl].khac === haoElement) return "Tử"; 
+            return "Hưu";
+        };
+
+        function checkLucXung(lines) {
+            if(!lines || lines.length !== 6) return false;
+            return DIA_CHI_XUNG[lines[0].chi] === lines[3].chi && DIA_CHI_XUNG[lines[1].chi] === lines[4].chi && DIA_CHI_XUNG[lines[2].chi] === lines[5].chi;
+        }
+        function checkLucHop(lines) {
+            if(!lines || lines.length !== 6) return false;
+            return DIA_CHI_HOP[lines[0].chi] === lines[3].chi && DIA_CHI_HOP[lines[1].chi] === lines[4].chi && DIA_CHI_HOP[lines[2].chi] === lines[5].chi;
+        }
+        function checkTienThoai(chi1, chi2) {
+            const tien = {'Hợi':'Tý', 'Dần':'Mão', 'Tỵ':'Ngọ', 'Thân':'Dậu', 'Sửu':'Thìn', 'Thìn':'Mùi', 'Mùi':'Tuất', 'Tuất':'Sửu'};
+            const thoai = {'Tý':'Hợi', 'Mão':'Dần', 'Ngọ':'Tỵ', 'Dậu':'Thân', 'Thìn':'Sửu', 'Mùi':'Thìn', 'Tuất':'Mùi', 'Sửu':'Tuất'};
+            if(tien[chi1] === chi2) return "Tiến Thần (Mạnh lên)";
+            if(thoai[chi1] === chi2) return "Thoái Thần (Yếu đi)";
+            return "";
+        }
+
+        const DIA_CHI_HAI = {'Tý':'Mùi','Mùi':'Tý','Sửu':'Ngọ','Ngọ':'Sửu','Dần':'Tỵ','Tỵ':'Dần','Mão':'Thìn','Thìn':'Mão','Thân':'Hợi','Hợi':'Thân','Dậu':'Tuất','Tuất':'Dậu'};
+        const HINH_GROUPS = [['Dần','Tỵ','Thân'], ['Sửu','Tuất','Mùi'], ['Tý','Mão']];
+        const TU_HINH_CHI = ['Thìn','Ngọ','Dậu','Hợi']; 
+        const TAM_HOP_GROUPS = [['Thân','Tý','Thìn','Thủy'],['Dần','Ngọ','Tuất','Hỏa'],['Tỵ','Dậu','Sửu','Kim'],['Hợi','Mão','Mùi','Mộc']];
+
+        function isHinh(a, b) {
+            if (!a || !b) return false;
+            if (a === b) return TU_HINH_CHI.includes(a);
+            return HINH_GROUPS.some(g => g.includes(a) && g.includes(b));
+        }
+        function isHai(a, b) { return DIA_CHI_HAI[a] === b; }
+
+        function checkTamHopCuc(chiList) {
+            for (const g of TAM_HOP_GROUPS) {
+                const bo3 = g.slice(0, 3);
+                if (bo3.every(c => chiList.includes(c))) return g[3]; 
+            }
+            return null;
+        }
+
+        function xetQuanHeVoiChi(chiHao, chiTacDong) {
+            if (!chiHao || !chiTacDong) return null;
+            if (chiHao === chiTacDong) return { loai: "Tỷ Hòa", tot: null, mota: "ngang hàng, thêm vượng khí" };
+            if (DIA_CHI_XUNG[chiHao] === chiTacDong) return { loai: "Xung", tot: false, mota: "bị xung động, dễ biến đổi/phá tán" };
+            if (DIA_CHI_HOP[chiHao] === chiTacDong) return { loai: "Hợp", tot: true, mota: "được hợp trói buộc, chuyển hóa (hợp mà vượng thì tốt, hợp mà tù tử thì bị Hợp Trụ - vô dụng)" };
+            if (isHinh(chiHao, chiTacDong)) return { loai: "Hình", tot: false, mota: "bị hình thương, việc dễ trắc trở, tổn hại ngầm" };
+            if (isHai(chiHao, chiTacDong)) return { loai: "Hại", tot: false, mota: "bị hại ngầm, âm thầm bất lợi dù bề ngoài yên ổn" };
+            const elHao = CHI_NGU_HANH[chiHao], elTacDong = CHI_NGU_HANH[chiTacDong];
+            if (ELEMENTS_RELATION[elTacDong].sinh === elHao) return { loai: "Sinh Phù", tot: true, mota: "được sinh trợ, thêm khí lực" };
+            if (ELEMENTS_RELATION[elHao].sinh === elTacDong) return { loai: "Bị Tiết", tot: false, mota: "bị tiết khí, hao tổn dần" };
+            if (ELEMENTS_RELATION[elTacDong].khac === elHao) return { loai: "Bị Khắc", tot: false, mota: "bị áp chế, khó phát triển" };
+            if (ELEMENTS_RELATION[elHao].khac === elTacDong) return { loai: "Khắc Lại", tot: true, mota: "hào đang khắc chế lại, chiếm thế chủ động" };
+            return { loai: "Bình Hòa", tot: null, mota: "không quan hệ trực tiếp" };
+        }
+
+        function phanLoaiSoHaoDong(dongCount) {
+            if (dongCount === 0) return { loai: "QUẺ TĨNH", ynghia: "Quẻ không có hào động, luận đoán chủ yếu dựa vào Nhật - Nguyệt sinh khắc hình xung Dụng thần và Thế hào." };
+            if (dongCount === 1) return { loai: "ĐỘC PHÁT", ynghia: "Chỉ một hào động (Độc Phát) — đây chính là chìa khóa của cả quẻ, mọi sự xoay quanh nó." };
+            if (dongCount >= 2 && dongCount <= 3) return { loai: "ĐA HÀO ĐỘNG", ynghia: "Có nhiều hào cùng động, cần xét hào nào sinh khắc hào nào trước để rõ trợ lực hay phá bại." };
+            return { loai: "LOẠN ĐỘNG", ynghia: "Quá nhiều hào động khiến quẻ rối loạn, nên tĩnh tâm chờ đợi hoặc xét hào tĩnh/Nhật thần làm chủ." };
+        }
+
+        // ====================================================================================
+        // GIAO DIỆN HÀO & QUÁI
+        // ====================================================================================
+        const TableHaoSymbol = ({ binary, isMoving }) => (
+            <div className="w-3.5 sm:w-4 h-[4px] mx-auto flex flex-col justify-center my-[1px]">
+                {binary === 1 ? (
+                    <div className={`w-full h-full rounded-[1px] ${isMoving ? 'bg-red-600' : 'bg-gray-800'}`}></div>
+                ) : (
+                    <div className="w-full h-full flex justify-between">
+                        <div className={`w-[42%] h-full rounded-[1px] ${isMoving ? 'bg-red-600' : 'bg-gray-800'}`}></div>
+                        <div className={`w-[42%] h-full rounded-[1px] ${isMoving ? 'bg-red-600' : 'bg-gray-800'}`}></div>
+                    </div>
+                )}
+            </div>
+        );
+
+        const BigHexagram = ({ lines, movingArray = [], className = "w-10 sm:w-12 space-y-1 sm:space-y-1.5 my-1.5", lineClass = "h-1 sm:h-1.5" }) => (
+            <div className={className}>
+                {lines.slice().reverse().map((l, revIdx) => {
+                    const idx = 5 - revIdx;
+                    const isMoving = movingArray[idx] || l.isDong;
+                    return (
+                        <div key={idx} className={`${lineClass} flex flex-col justify-center`}>
+                            {l.binary === 1 ? (
+                                <div className={`w-full h-full rounded-sm ${isMoving ? 'bg-red-600' : 'bg-gray-900'}`}></div>
+                            ) : (
+                                <div className="w-full h-full flex justify-between">
+                                    <div className={`w-[42%] h-full rounded-sm ${isMoving ? 'bg-red-600' : 'bg-gray-900'}`}></div>
+                                    <div className={`w-[42%] h-full rounded-sm ${isMoving ? 'bg-red-600' : 'bg-gray-900'}`}></div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+
+        // ====================================================================================
+        // COMPONENT CHÍNH APP
+        // ====================================================================================
+        const MainApp = () => {
+            const [view, setView] = React.useState('setup'); 
+            const [systemType, setSystemType] = React.useState('luchao'); 
+            
+            const [upperId, setUpperId] = React.useState(7); 
+            const [lowerId, setLowerId] = React.useState(0); 
+            const [moving, setMoving] = React.useState([false, false, false, false, false, false]); 
+            
+            const [numUpper, setNumUpper] = React.useState('8');
+            const [numLower, setNumLower] = React.useState('1');
+            const [numMoving, setNumMoving] = React.useState('1');
+            const [serialString, setSerialString] = React.useState(''); 
+            
+            const [activeCategory, setActiveCategory] = React.useState('cautai');
+            const [selectedTopic, setSelectedTopic] = React.useState(CATEGORIES[0].items[0]); 
+            
+            const [isCustomTopic, setIsCustomTopic] = React.useState(false);
+            const [customMucDich, setCustomMucDich] = React.useState('');
+            const [customDungThan, setCustomDungThan] = React.useState('Thê Tài');
+
+            const [solarDate, setSolarDate] = React.useState(''); 
+            const [solarTime, setSolarTime] = React.useState(''); 
+            
+            const [lunarDay, setLunarDay] = React.useState('');
+            const [lunarMonth, setLunarMonth] = React.useState('');
+            const [lunarYear, setLunarYear] = React.useState('');
+            const [isLeapMonth, setIsLeapMonth] = React.useState(false);
+            
+            const [tietKhi, setTietKhi] = React.useState('Chưa rõ/Không dùng');
+            
+            const [yearCan, setYearCan] = React.useState('Giáp');
+            const [yearChi, setYearChi] = React.useState('Thìn');
+            const [monthCan, setMonthCan] = React.useState('Bính');
+            const [monthChi, setMonthChi] = React.useState('Dần');
+            const [dayCan, setDayCan] = React.useState('Giáp');
+            const [dayChi, setDayChi] = React.useState('Tý');
+            const [hourCan, setHourCan] = React.useState('Giáp');
+            const [hourChi, setHourChi] = React.useState('Tý');
+
+            const [luanGiaiText, setLuanGiaiText] = React.useState('');
+            const [isGenerating, setIsGenerating] = React.useState(false);
+            const [isExporting, setIsExporting] = React.useState(false);
+            
+            const [notification, setNotification] = React.useState('');
+
+            const showNotification = (msg) => {
+                setNotification(msg);
+                setTimeout(() => setNotification(''), 3000);
+            };
+
+            const thietLapGioHienTai = () => {
+                const current = new Date();
+                const yyyy = current.getFullYear(); 
+                const mm = String(current.getMonth() + 1).padStart(2, '0'); 
+                const dd = String(current.getDate()).padStart(2, '0');
+                setSolarDate(`${yyyy}-${mm}-${dd}`);
+                
+                const hh = String(current.getHours()).padStart(2, '0'); 
+                const mins = String(current.getMinutes()).padStart(2, '0');
+                setSolarTime(`${hh}:${mins}`);
+            };
+
+            React.useEffect(() => { 
+                thietLapGioHienTai(); 
+            }, []);
+
+            React.useEffect(() => {
+                if (!solarDate) return;
+
+                try {
+                    const [yyyy, mm, dd] = solarDate.split('-').map(Number);
+                    let hh = 0, mins = 0;
+                    if (solarTime) {
+                        const parts = solarTime.split(':').map(Number);
+                        hh = parts[0] || 0;
+                        mins = parts[1] || 0;
+                    }
+                    const current = new Date(yyyy, mm - 1, dd, hh, mins);
+                    
+                    if (isNaN(current.getTime())) return;
+
+                    if (typeof Lunar !== 'undefined' && typeof Solar !== 'undefined') {
+                        const solar = Solar.fromDate(current);
+                        const lunar = solar.getLunar();
+                        
+                        let lMonth = lunar.getMonth();
+                        if (lMonth < 0) { 
+                            setIsLeapMonth(true); 
+                            setLunarMonth(String(Math.abs(lMonth))); 
+                        } else { 
+                            setIsLeapMonth(false); 
+                            setLunarMonth(String(lMonth)); 
+                        }
+                        setLunarDay(String(lunar.getDay())); 
+                        setLunarYear(String(lunar.getYear()));
+
+                        const baZi = lunar.getEightChar();
+                        const canMap = {'甲':0, '乙':1, '丙':2, '丁':3, '戊':4, '己':5, '庚':6, '辛':7, '壬':8, '癸':9};
+                        const chiMap = {'子':0, '丑':1, '寅':2, '卯':3, '辰':4, '巳':5, '午':6, '未':7, '申':8, '酉':9, '戌':10, '亥':11};
+                        
+                        if (baZi) {
+                            const yGan = baZi.getYearGan(); const yZhi = baZi.getYearZhi();
+                            if (canMap[yGan] !== undefined) setYearCan(THIEN_CAN[canMap[yGan]]);
+                            if (chiMap[yZhi] !== undefined) setYearChi(DIA_CHI[chiMap[yZhi]]);
+
+                            const mGan = baZi.getMonthGan(); const mZhi = baZi.getMonthZhi();
+                            if (canMap[mGan] !== undefined) setMonthCan(THIEN_CAN[canMap[mGan]]);
+                            if (chiMap[mZhi] !== undefined) setMonthChi(DIA_CHI[chiMap[mZhi]]);
+
+                            const dGan = baZi.getDayGan(); const dZhi = baZi.getDayZhi();
+                            if (canMap[dGan] !== undefined) setDayCan(THIEN_CAN[canMap[dGan]]);
+                            if (chiMap[dZhi] !== undefined) setDayChi(DIA_CHI[chiMap[dZhi]]);
+
+                            const hGan = baZi.getTimeGan(); const hZhi = baZi.getTimeZhi();
+                            if (canMap[hGan] !== undefined) setHourCan(THIEN_CAN[canMap[hGan]]);
+                            if (chiMap[hZhi] !== undefined) setHourChi(DIA_CHI[chiMap[hZhi]]);
+                            
+                            const jq = lunar.getPrevJieQi(true);
+                            if(jq) {
+                                const JQ_MAP = {
+                                    "立春": "Lập Xuân", "雨水": "Vũ Thủy", "惊蛰": "Kinh Trập", "春分": "Xuân Phân",
+                                    "清明": "Thanh Minh", "谷雨": "Cốc Vũ", "立夏": "Lập Hạ", "小满": "Tiểu Mãn",
+                                    "芒种": "Mang Chủng", "夏至": "Hạ Chí", "小暑": "Tiểu Thử", "大暑": "Đại Thử",
+                                    "立秋": "Lập Thu", "处暑": "Xử Thử", "白露": "Bạch Lộ", "秋分": "Thu Phân",
+                                    "寒露": "Hàn Lộ", "霜降": "Sương Giáng", "立冬": "Lập Đông", "小雪": "Tiểu Tuyết",
+                                    "大雪": "Đại Tuyết", "冬至": "Đông Chí", "小寒": "Tiểu Hàn", "大寒": "Đại Hàn"
+                                };
+                                const viName = JQ_MAP[jq.getName()];
+                                if(viName) setTietKhi(viName);
+                            }
+                            return; 
+                        }
+                    }
+                } catch(e) {
+                    console.error("Lỗi đồng bộ ngày tháng:", e);
+                }
+            }, [solarDate, solarTime]); 
+
+            const handleTopicSelect = (topicItem) => {
+                setIsCustomTopic(false);
+                setSelectedTopic(topicItem);
+            };
+
+            const handleCustomTopicChange = (e) => {
+                setIsCustomTopic(true);
+                setCustomMucDich(e.target.value);
+            };
+
+            const handleSerialChange = (val) => {
+                setSerialString(val);
+                const digits = val.replace(/\D/g, ''); 
+                if (digits.length > 0) {
+                    const mid = Math.floor(digits.length / 2);
+                    const s1 = digits.slice(0, mid); const s2 = digits.slice(mid);
+                    let sum1 = s1.split('').reduce((acc, curr) => acc + parseInt(curr), 0);
+                    let sum2 = s2.split('').reduce((acc, curr) => acc + parseInt(curr), 0);
+                    if (s1.length === 0) sum1 = sum2; 
+                    if (sum1 === 0) sum1 = 8; if (sum2 === 0) sum2 = 8;
+                    const totalSum = sum1 + sum2;
+                    let upper = sum1 % 8; if (upper === 0) upper = 8;
+                    let lower = sum2 % 8; if (lower === 0) lower = 8;
+                    let movingLine = totalSum % 6; if (movingLine === 0) movingLine = 6;
+                    setNumUpper(upper.toString()); setNumLower(lower.toString()); setNumMoving(movingLine.toString());
+                }
+            };
+
+            const layThandSat = (idx, chiName, lucThan) => {
+                const stars = []; let tkList = []; const dayCanChi = dayCan + " " + dayChi;
+                if (["Giáp Tý", "Ất Sửu", "Bính Dần", "Đinh Mão", "Mậu Thìn", "Kỷ Tỵ", "Canh Ngọ", "Tân Mùi", "Nhâm Thân", "Quý Dậu"].includes(dayCanChi)) tkList = ["Tuất", "Hợi"];
+                else if (["Giáp Tuất", "Ất Hợi", "Bính Tý", "Đinh Sửu", "Mậu Dần", "Kỷ Mão", "Canh Thìn", "Tân Tỵ", "Nhâm Ngọ", "Quý Mùi"].includes(dayCanChi)) tkList = ["Thân", "Dậu"];
+                else if (["Giáp Thân", "Ất Dậu", "Bính Tuất", "Đinh Hợi", "Mậu Tý", "Kỷ Sửu", "Canh Dần", "Tân Mão", "Nhâm Thìn", "Quý Tỵ"].includes(dayCanChi)) tkList = ["Ngọ", "Mùi"];
+                else if (["Giáp Ngọ", "Ất Mùi", "Bính Thân", "Đinh Dậu", "Mậu Tuất", "Kỷ Hợi", "Canh Tý", "Tân Sửu", "Nhâm Dần", "Quý Mão"].includes(dayCanChi)) tkList = ["Thìn", "Tỵ"];
+                else if (["Giáp Thìn", "Ất Tỵ", "Bính Ngọ", "Đinh Mùi", "Mậu Thân", "Kỷ Dậu", "Canh Tuất", "Tân Hợi", "Nhâm Tý", "Quý Sửu"].includes(dayCanChi)) tkList = ["Dần", "Mão"];
+                else tkList = ["Tý", "Sửu"]; 
+                if (tkList.includes(chiName)) stars.push("Tuần không");
+                return stars;
+            };
+
+            const toggleHaoDong = (index) => {
+                const nextMov = [...moving]; nextMov[index] = !nextMov[index]; setMoving(nextMov);
+            };
+
+            // GIEO QUẺ TỰ ĐỘNG BẰNG ĐỒNG XU
+            const handleGieoQueTuDong = () => {
+                let linesBinary = [];
+                let newMoving = [false, false, false, false, false, false];
+                
+                for(let i = 0; i < 6; i++) {
+                    let c1 = Math.random() > 0.5 ? 3 : 2;
+                    let c2 = Math.random() > 0.5 ? 3 : 2;
+                    let c3 = Math.random() > 0.5 ? 3 : 2;
+                    let sum = c1 + c2 + c3;
+                    
+                    if (sum === 9) { linesBinary.push(1); newMoving[i] = true; } // Lão Dương
+                    else if (sum === 8) { linesBinary.push(0); newMoving[i] = false; } // Thiếu Âm
+                    else if (sum === 7) { linesBinary.push(1); newMoving[i] = false; } // Thiếu Dương
+                    else if (sum === 6) { linesBinary.push(0); newMoving[i] = true; } // Lão Âm
+                }
+                
+                const newLowerId = findTrigramFromBinary(linesBinary.slice(0, 3));
+                const newUpperId = findTrigramFromBinary(linesBinary.slice(3, 6));
+                
+                setLowerId(newLowerId);
+                setUpperId(newUpperId);
+                setMoving(newMoving);
+                
+                showNotification("Đã gieo quẻ tự động bằng đồng xu thành công!");
+            };
+
+            const keyChu = `${upperId}_${lowerId}`;
+            const [chuName, chuCungName, chuTheHao, chuThoan] = HEXAGRAM_DATABASE[keyChu] || ["Quẻ Lạ", "Càn", 6, "HUNG CÁT KHÓ LƯỜNG"];
+            const chuCungElement = CUNG_ELEMENTS[chuCungName];
+            const chuUngHao = (chuTheHao + 2) % 6 + 1;
+
+            const chuLines = [];
+            const upperBin = BAT_QUAI[upperId].binary; const lowerBin = BAT_QUAI[lowerId].binary;
+            const totalBinChu = [...lowerBin, ...upperBin]; 
+
+            for (let idx = 0; idx < 6; idx++) {
+                const isUpper = idx >= 3; const trigramId = isUpper ? upperId : lowerId; const info = anLinhHao(trigramId, idx);
+                chuLines.push({ index: idx, binary: totalBinChu[idx], can: info.can, chi: info.chi, element: info.element, lucThan: getLucThan(chuCungElement, info.element), isDong: moving[idx] });
+            }
+
+            const mapPhuc = timPhucThan(chuCungName, chuLines);
+            const totalBinBien = totalBinChu.map((val, idx) => moving[idx] ? (val === 1 ? 0 : 1) : val);
+            
+            const bienLowerId = findTrigramFromBinary(totalBinBien.slice(0, 3)); const bienUpperId = findTrigramFromBinary(totalBinBien.slice(3, 6));
+
+            const keyBien = `${bienUpperId}_${bienLowerId}`;
+            const [bienName, bienCungName] = HEXAGRAM_DATABASE[keyBien] || ["Biến Quẻ", "Khôn", 6, "VẠN SỰ BIẾN ĐỔI"];
+
+            const bienLines = [];
+            for (let idx = 0; idx < 6; idx++) {
+                const isUpper = idx >= 3; const trigramId = isUpper ? bienUpperId : bienLowerId; const info = anLinhHao(trigramId, idx);
+                bienLines.push({ index: idx, binary: totalBinBien[idx], can: info.can, chi: info.chi, element: info.element, lucThan: getLucThan(chuCungElement, info.element) });
+            }
+
+            const startLucThuIdx = LUC_THU_KHOI[dayCan] || 0; const lucThuLineList = [];
+            for (let i = 0; i < 6; i++) lucThuLineList.push(LUC_THU_LIST[(startLucThuIdx + i) % 6]);
+
+            const layQuaiMaiHoa = (num) => { const n = parseInt(num) || 1; const r = n % 8; const s = r === 0 ? 8 : r; return BAT_QUAI.find(q => q.number === s) || BAT_QUAI[0]; };
+            const layHaoDongMaiHoa = (num) => { const n = parseInt(num) || 1; const r = n % 6; return r === 0 ? 6 : r; };
+
+            const mhUpperQuai = layQuaiMaiHoa(numUpper); const mhLowerQuai = layQuaiMaiHoa(numLower); const mhHaoDong = layHaoDongMaiHoa(numMoving); 
+            const totalMhBinChu = [...mhLowerQuai.binary, ...mhUpperQuai.binary];
+            const totalMhBinBien = totalMhBinChu.map((v, i) => (i === (mhHaoDong - 1)) ? (v === 1 ? 0 : 1) : v);
+
+            const mhLowerBienId = findTrigramFromBinary(totalMhBinBien.slice(0, 3)); const mhUpperBienId = findTrigramFromBinary(totalMhBinBien.slice(3, 6));
+            const mhUpperBienQuai = BAT_QUAI[mhUpperBienId]; const mhLowerBienQuai = BAT_QUAI[mhLowerBienId];
+
+            const mhChuKey = `${mhUpperQuai.id}_${mhLowerQuai.id}`; const mhChuNameFull = HEXAGRAM_DATABASE[mhChuKey] ? HEXAGRAM_DATABASE[mhChuKey][0] : `${mhUpperQuai.name} ${mhLowerQuai.name}`;
+            const mhBienKey = `${mhUpperBienId}_${mhLowerBienId}`; const mhBienNameFull = HEXAGRAM_DATABASE[mhBienKey] ? HEXAGRAM_DATABASE[mhBienKey][0] : `${mhUpperBienQuai.name} ${mhLowerBienQuai.name}`;
+
+            const isDongInUpper = (mhHaoDong > 3); const theQuai = isDongInUpper ? mhLowerQuai : mhUpperQuai; const dungQuai = isDongInUpper ? mhUpperQuai : mhLowerQuai;
+
+            const hoUpperBin = [totalMhBinChu[2], totalMhBinChu[3], totalMhBinChu[4]]; const hoLowerBin = [totalMhBinChu[1], totalMhBinChu[2], totalMhBinChu[3]];
+            const hoUpperQuai = BAT_QUAI[findTrigramFromBinary(hoUpperBin)]; const hoLowerQuai = BAT_QUAI[findTrigramFromBinary(hoLowerBin)];
+
+            const mhHoKey = `${hoUpperQuai.id}_${hoLowerQuai.id}`; const mhHoNameFull = HEXAGRAM_DATABASE[mhHoKey] ? HEXAGRAM_DATABASE[mhHoKey][0] : `${hoUpperQuai.name} ${hoLowerQuai.name}`;
+            
+            const mhChuLines = totalMhBinChu.map((bin, i) => ({ binary: bin, isDong: i === mhHaoDong - 1 }));
+            const mhHoLines = [...hoLowerQuai.binary, ...hoUpperQuai.binary].map((bin) => ({ binary: bin, isDong: false }));
+            const mhBienLines = totalMhBinBien.map((bin) => ({ binary: bin, isDong: false }));
+
+            const handleSetupSubmit = () => { 
+                if(isCustomTopic && !customMucDich.trim()) {
+                    showNotification("Vui lòng nhập nội dung vấn sự cần xem!");
+                    return;
+                }
+                setLuanGiaiText(''); setView('result'); 
+            };
+
+            const analyzeLineState = (line, bLine) => {
+                if(!line) return null;
+                const isTKhong = layThandSat(line.index, line.chi, line.lucThan).includes("Tuần không");
+                const vsMonth = checkVuongSuy(line.element, monthChi);
+                const vsDay = checkVuongSuy(line.element, dayChi);
+                const isNguyetPha = DIA_CHI_XUNG[monthChi] === line.chi;
+                const isNhatPha = DIA_CHI_XUNG[dayChi] === line.chi && !["Vượng", "Tướng"].includes(vsMonth) && !line.isDong;
+                const isAmDong = DIA_CHI_XUNG[dayChi] === line.chi && ["Vượng", "Tướng"].includes(vsMonth) && !line.isDong;
+                
+                const isMo = TR_SINH_MAP[line.element][monthChi] === "Mộ" || TR_SINH_MAP[line.element][dayChi] === "Mộ";
+                const isTuyet = TR_SINH_MAP[line.element][monthChi] === "Tuyệt" || TR_SINH_MAP[line.element][dayChi] === "Tuyệt";
+
+                let thucLuc = "BÌNH THƯỜNG";
+                if(isNguyetPha || isNhatPha) thucLuc = "VÔ DỤNG (Bị Phá)";
+                else if (isTKhong && ["Hưu", "Tù", "Tử"].includes(vsMonth) && !line.isDong) thucLuc = "CHÂN KHÔNG (Vô dụng)";
+                else if (isTKhong && (["Vượng", "Tướng"].includes(vsMonth) || line.isDong)) thucLuc = "GIẢ KHÔNG (Chờ thời)";
+                else if (line.isDong || isAmDong) thucLuc = "RẤT MẠNH (Động)";
+                else if (["Vượng", "Tướng"].includes(vsMonth) || ["Vượng", "Tướng"].includes(vsDay) || monthChi === line.chi || dayChi === line.chi) thucLuc = "MẠNH (Vượng Tướng)";
+                else if (isMo) thucLuc = "YẾU (Nhập Mộ)";
+                else if (isTuyet) thucLuc = "CỰC YẾU (Tuyệt Địa)";
+                else thucLuc = "YẾU (Hưu Tù)";
+
+                let bienHoa = "";
+                let tienThoai = "";
+                let phanPhucNgâm = "";
+                
+                if (line.isDong && bLine) {
+                    if(ELEMENTS_RELATION[bLine.element].sinh === line.element) bienHoa = "Hồi Đầu Sinh (Tốt lên)";
+                    if(ELEMENTS_RELATION[bLine.element].khac === line.element) bienHoa = "Hồi Đầu Khắc (Xấu đi)";
+                    if(layThandSat(line.index, bLine.chi, bLine.lucThan).includes("Tuần không")) bienHoa = "Hóa Không (Ảo vọng, vô thành)";
+                    
+                    tienThoai = checkTienThoai(line.chi, bLine.chi);
+                    
+                    if(DIA_CHI_XUNG[line.chi] === bLine.chi) phanPhucNgâm = "Hóa Phản Ngâm (Đảo lộn, tai họa)";
+                    else if(line.chi === bLine.chi) phanPhucNgâm = "Hóa Phục Ngâm (Bế tắc, u sầu)";
+                }
+
+                const qhNhat = xetQuanHeVoiChi(line.chi, dayChi);
+                const qhNguyet = xetQuanHeVoiChi(line.chi, monthChi);
+                const biHinh = isHinh(line.chi, dayChi) || isHinh(line.chi, monthChi);
+                const biHai = isHai(line.chi, dayChi) || isHai(line.chi, monthChi);
+
+                return { ...line, isTKhong, vsMonth, vsDay, isNguyetPha, isNhatPha, isAmDong, isMo, isTuyet, thucLuc, bienHoa, tienThoai, phanPhucNgâm, qhNhat, qhNguyet, biHinh, biHai };
+            };
+
+            const generateSystemInterpretation = () => {
+                setIsGenerating(true);
+                setTimeout(() => {
+                    let txt = ''; 
+                    
+                    const finalMucDich = isCustomTopic ? customMucDich : selectedTopic.name;
+                    const dungThanTarget = isCustomTopic ? customDungThan : selectedTopic.dungThan;
+                    const chuDeType = isCustomTopic ? 'CHUNG' : selectedTopic.type;
+
+                    if (systemType === 'luchao') {
+                        const aChuLines = chuLines.map((l, i) => analyzeLineState(l, bienLines[i]));
+                        const theLine = aChuLines.find(l => l.index === chuTheHao - 1);
+                        const ungLine = aChuLines.find(l => l.index === chuUngHao - 1);
+                        
+                        const isChuXung = checkLucXung(aChuLines);
+                        const isChuHop = checkLucHop(aChuLines);
+
+                        let dungLines = aChuLines.filter(l => l.lucThan === dungThanTarget);
+                        let isPhucThan = false; let pThan = null; let phiThan = null;
+                        
+                        if (dungThanTarget === "Thế") { dungLines = [theLine]; } 
+                        else if (dungThanTarget === "Ứng") { dungLines = [ungLine]; }
+
+                        let dtLine = null;
+                        if (dungLines.length === 0) {
+                            isPhucThan = true;
+                            const keyPhuc = Object.keys(mapPhuc).find(k => mapPhuc[k].lucThan === dungThanTarget);
+                            if (keyPhuc) { 
+                                pThan = analyzeLineState({...mapPhuc[keyPhuc], index: parseInt(keyPhuc), isDong: false}, null); 
+                                phiThan = aChuLines[keyPhuc]; 
+                            }
+                        } else if (dungLines.length > 1) {
+                            dtLine = dungLines.find(l => l.isDong || l.isAmDong);
+                            if (!dtLine) dtLine = dungLines.find(l => !l.isTKhong && !l.isNguyetPha && !l.isNhatPha);
+                            if (!dtLine) dtLine = dungLines[0];
+                        } else {
+                            dtLine = dungLines[0];
+                        }
+                                     
+                        let targetLucThan = dtLine ? dtLine.lucThan : theLine.lucThan;
+                        const roles = getPhuTroThan(targetLucThan);
+                        
+                        let nguyenLines = aChuLines.filter(l => l.lucThan === roles.nguyen);
+                        let kyLines = aChuLines.filter(l => l.lucThan === roles.ky);
+                        
+                        const dongCount = aChuLines.filter(l => l.isDong).length;
+                        const kyDong = kyLines.find(l => l.isDong || l.isAmDong);
+                        const nguyenDong = nguyenLines.find(l => l.isDong || l.isAmDong);
+
+                        let cuuLines = aChuLines.filter(l => l.lucThan === roles.cuu);
+                        const cuuDong = cuuLines.find(l => l.isDong || l.isAmDong);
+
+                        txt += `[PHÂN TÍCH CHUYÊN SÂU LỤC HÀO]\n`;
+                        txt += `Vấn sự: "**${finalMucDich}**" (Lập tháng ${monthChi}, ngày ${dayChi})\n`;
+                        txt += `==============================================\n\n`;
+
+                        // ==== TỔNG QUAN QUẺ ====
+                        const soHaoDong = phanLoaiSoHaoDong(dongCount);
+                        txt += `► **TỔNG QUAN QUẺ (Nền Tảng Luận Đoán):**\n`;
+                        txt += `- Số hào động: **${dongCount}/6** → **${soHaoDong.loai}**. ${soHaoDong.ynghia}\n`;
+                        if (isChuXung) txt += `- ⚡ Quẻ LỤC XUNG (6 hào chủ đều xung hào biến): việc dễ tan vỡ, khó thành, dễ đổi thay giữa chừng — trừ khi hỏi việc cần ly tán, giải quyết thì đây lại là điềm hợp.\n`;
+                        if (isChuHop) txt += `- 🔗 Quẻ LỤC HỢP (6 hào chủ đều hợp hào biến): việc dễ thành, có quý nhân trợ giúp, các bên ăn ý hợp tác thuận lợi.\n`;
+                        const tamHopCuc = checkTamHopCuc(aChuLines.map(l => l.chi).concat([dayChi, monthChi]));
+                        if (tamHopCuc) txt += `- 🌟 Các hào/Nhật-Nguyệt hợp thành TAM HỢP CỤC hành **${tamHopCuc}**: khí thế tụ hội mạnh, lục thân thuộc hành ${tamHopCuc} trong quẻ được tăng cường sức mạnh rõ rệt.\n`;
+                        if (theLine && ungLine) {
+                            const qhTheUng = xetQuanHeVoiChi(theLine.chi, ungLine.chi);
+                            txt += `- 🤝 Thế - Ứng: hào Ứng (đối tác/người/việc liên quan) so với hào Thế (bản thân) ở quan hệ **${qhTheUng.loai}** (${qhTheUng.mota}).\n`;
+                        }
+                        if (theLine) txt += `- 📅 Nhật thần (${dayChi}) với hào Thế: **${theLine.qhNhat.loai}** — ${theLine.qhNhat.mota}.\n`;
+                        txt += `\n`;
+
+                        // ==== DỤNG - NGUYÊN - KỴ - CỪU THẦN ====
+                        txt += `► **DỤNG - NGUYÊN - KỴ - CỪU THẦN:**\n`;
+                        if (isPhucThan) {
+                            txt += `- 🌱 Dụng thần **${dungThanTarget}** PHỤC TÀNG (ẩn dưới hào Phi Thần), chưa hiện ra trong quẻ — sự việc còn che giấu, khó thấy rõ ràng ngay.\n`;
+                            if (pThan && phiThan) {
+                                const phiKhacPhuc = ELEMENTS_RELATION[phiThan.element] && ELEMENTS_RELATION[phiThan.element].khac === pThan.element;
+                                const phucSinhPhi = ELEMENTS_RELATION[pThan.element] && ELEMENTS_RELATION[pThan.element].sinh === phiThan.element;
+                                if (phiKhacPhuc) txt += `+ ⛔ Phi Thần (${phiThan.lucThan}) khắc Phục Thần: Dụng thần bị đè nén nặng, khó xuất hiện, việc bị che lấp/cản trở ngầm lâu dài.\n`;
+                                else if (phucSinhPhi) txt += `+ 💦 Phục Thần sinh Phi Thần (bị tiết khí): âm thầm hao tổn, chưa thể trợ lực ngay.\n`;
+                                else txt += `+ Phi Thần không khắc Phục Thần: Dụng thần còn cơ hội xuất lộ khi gặp ngày/tháng Xung Phi Thần hoặc lúc Phi Thần suy tù.\n`;
+                                txt += `+ ⏳ Phục Thần **${pThan.lucThan}** (${pThan.chi}-${pThan.element}, thực lực: **${pThan.thucLuc}**) sẽ ứng/xuất hiện rõ vào ngày **${DIA_CHI_XUNG[phiThan.chi]}** (ngày xung Phi Thần) hoặc khi vận đến ngày/tháng **${pThan.chi}** (bản khí vượng lên).\n`;
+                            }
+                        } else if (dtLine) {
+                            txt += `- 🌱 Dụng thần **${targetLucThan}** tại Hào ${dtLine.index + 1} (${dtLine.chi}-${dtLine.element}) — Thực lực: **${dtLine.thucLuc}**.\n`;
+                            txt += `+ Với Nhật thần (${dayChi}): **${dtLine.qhNhat.loai}** (${dtLine.qhNhat.mota}). Với Nguyệt lệnh (${monthChi}): **${dtLine.qhNguyet.loai}** (${dtLine.qhNguyet.mota}).\n`;
+                            if (dtLine.biHinh) txt += `+ ⚠️ Dụng thần bị HÌNH bởi Nhật/Nguyệt: việc dễ trục trặc, tổn hao ngầm dù không thấy rõ nguyên do.\n`;
+                            if (dtLine.biHai) txt += `+ ⚠️ Dụng thần bị HẠI bởi Nhật/Nguyệt: bề ngoài có vẻ yên nhưng âm thầm bị cản trở, người liên quan thiếu thiện chí.\n`;
+                            if (dtLine.isDong && dtLine.bienHoa) txt += `+ Hào động biến ra: **${dtLine.bienHoa}**.\n`;
+                        }
+
+                        if (nguyenDong) {
+                            txt += `- 🌿 Nguyên thần (**${roles.nguyen}**) PHÁT ĐỘNG tại hào ${nguyenDong.index + 1}: rất tốt, có nguồn trợ lực sinh cho Dụng thần, việc có quý nhân/nội lực giúp đỡ dồi dào.\n`;
+                        } else if (nguyenLines.length > 0) {
+                            const nl = nguyenLines[0];
+                            txt += `- 🌿 Nguyên thần (**${roles.nguyen}**) ở hào ${nl.index + 1}, tĩnh, thực lực ${nl.thucLuc}: nguồn trợ lực tiềm ẩn, chưa phát huy tác dụng ngay.\n`;
+                        }
+
+                        if (kyDong) {
+                            txt += `- ⚔️ Kỵ thần (**${roles.ky}**) PHÁT ĐỘNG tại hào ${kyDong.index + 1}: rất xấu, có nhân tố phá hoại/cản trở trực tiếp khắc Dụng thần.\n`;
+                            if (dtLine && ELEMENTS_RELATION[kyDong.element] && ELEMENTS_RELATION[kyDong.element].khac === dtLine.element) {
+                                txt += `+ Kỵ thần khắc trực tiếp Dụng thần ngũ hành ${dtLine.element}: cần đề phòng trở ngại lớn, tiểu nhân phá hoại.\n`;
+                            }
+                        } else {
+                            txt += `- ⚔️ Kỵ thần (**${roles.ky}**) yên tĩnh, không phát động: chưa có mối nguy hại rõ rệt, tạm thời an toàn.\n`;
+                        }
+
+                        if (cuuDong) {
+                            txt += `- 🌫️ Cừu thần (**${roles.cuu}**) cũng phát động: gián tiếp sinh trợ cho Kỵ thần, khiến trở ngại càng thêm khó hóa giải, đồng thời khắc chế nguồn Nguyên thần.\n`;
+                        }
+                        txt += `\n`;
+
+                        // ==========================================================
+                        // TÁCH LUẬN GIẢI THEO TỪNG CHỦ ĐỀ CỤ THỂ VÀ BỔ SUNG FALLBACK
+                        // ==========================================================
+
+                        if (chuDeType.startsWith('CT_')) {
+                            txt += `► **LỜI BÀN VỀ CẦU TÀI / KINH DOANH:**\n`;
+                            const taiLines = aChuLines.filter(l => l.lucThan === 'Thê Tài');
+                            const tuLines = aChuLines.filter(l => l.lucThan === 'Tử Tôn');
+                            const huynhLines = aChuLines.filter(l => l.lucThan === 'Huynh Đệ');
+                            const phuLines = aChuLines.filter(l => l.lucThan === 'Phụ Mẫu');
+
+                            const taiDong = taiLines.find(l => l.isDong || l.isAmDong);
+                            const tuDong = tuLines.find(l => l.isDong || l.isAmDong);
+                            const huynhDong = huynhLines.find(l => l.isDong || l.isAmDong);
+                            const phuDong = phuLines.find(l => l.isDong || l.isAmDong);
+                            const dtTai = dtLine && dtLine.lucThan === 'Thê Tài' ? dtLine : pThan;
+
+                            let hasTaiText = false;
+
+                            if (theLine.lucThan === 'Huynh Đệ') {
+                                txt += `- ❌ Hào Huynh Đệ trì Thế (Huynh là thần khắc Tài). Cầu tài vô cùng khó khăn, vất vả, vạn sự mưu tính dễ thành công dã tràng.\n`;
+                                hasTaiText = true;
+                            }
+
+                            if ((!dtTai || dtTai.isTKhong || dtTai.thucLuc.includes("VÔ DỤNG")) && (!tuLines.length || tuLines.every(l => l.isTKhong || l.thucLuc.includes("VÔ DỤNG")))) {
+                                txt += `- 🌫️ "Tài Phúc câu vô": Cả Tài (tiền) và Phúc (nguồn tiền) đều không xuất hiện hoặc suy tuyệt. Cầu tài vô ích, giống như ôm cây đợi thỏ.\n`;
+                                hasTaiText = true;
+                            }
+                            else if (phuDong && huynhDong) {
+                                txt += `- 📉 "Phụ Huynh giai động": Hào Phụ Mẫu và Huynh Đệ cùng động. Phụ khắc Phúc (nguồn tiền), Huynh cướp Tài. Hai rào cản lớn, mưu cầu tài lộc như leo cây bắt cá.\n`;
+                                hasTaiText = true;
+                            }
+                            else if (!dtTai && tuDong && huynhDong) {
+                                txt += `- 🔄 Có Phúc không Tài, nhưng Huynh Đệ động vẫn còn hy vọng. Huynh động sinh Tử, Tử lại sinh Tài, xoay chuyển cục diện đắc lợi.\n`;
+                                hasTaiText = true;
+                            }
+                            else if (taiDong && tuDong && huynhDong) {
+                                txt += `- 💰 Tài, Tử và Huynh Đệ cùng động: Huynh động sinh Tử, Tử động sinh Tài. Dòng khí lưu thông liên tục, tiền bạc dồi dào.\n`;
+                                hasTaiText = true;
+                            }
+                            else if (dtTai && !dtTai.thucLuc.includes("VÔ DỤNG")) {
+                                let hasRel = false;
+                                if (ELEMENTS_RELATION[dtTai.element].sinh === theLine.element) { txt += `- 💵 **Tài sinh Thế:** Tiền bạc tự tìm đến mình, cầu tài rất dễ dàng thuận lợi.\n`; hasRel = true;}
+                                else if (DIA_CHI_HOP[dtTai.chi] === theLine.chi) { txt += `- 🤝 **Tài hợp Thế:** Mưu sự kinh doanh dễ dàng hợp tác, tiền bạc tụ về tay.\n`; hasRel = true;}
+                                else if (dtTai.index === theLine.index) { txt += `- 🏦 **Tài trì Thế:** Bản thân đang nắm giữ tài lộc, kinh doanh thuận lợi.\n`; hasRel = true;}
+                                else if (ELEMENTS_RELATION[dtTai.element].khac === theLine.element) { txt += `- ⚖️ **Tài khắc Thế:** Dù vất vả nhưng cũng là tượng tiền bạc tìm đến người.\n`; hasRel = true;}
+                                else if (ELEMENTS_RELATION[theLine.element].khac === dtTai.element) { txt += `- 🏃 **Thế khắc Tài:** Bản thân phải lặn lội đi tìm tiền, cầu tài khó khăn và mệt nhọc hơn.\n`; hasRel = true;}
+                                if(hasRel) hasTaiText = true;
+                            }
+
+                            // FALLBACK CHO CẦU TÀI: Đảm bảo có chữ in ra nếu không rơi vào các trường hợp trên
+                            if (!hasTaiText) {
+                                if (dtTai && (dtTai.thucLuc.includes("MẠNH") || dtTai.isDong)) {
+                                    txt += `- 🌟 Nhìn chung hào Thê Tài (Tiền bạc) có thực lực và vượng tướng. Việc kinh doanh buôn bán trước mắt có thể bình lặng nhưng bản chất vẫn có thể sinh lời, dòng tiền được bảo toàn.\n`;
+                                } else {
+                                    txt += `- 📉 Nhìn chung hào Thê Tài (Tiền bạc) đang hưu tù, yếu ớt. Việc cầu tài lúc này gặp nhiều rào cản, lợi nhuận mỏng manh, nên giữ vốn thay vì đầu tư lớn.\n`;
+                                }
+                            }
+                        }
+                        else if (chuDeType.startsWith('TD_')) {
+                            txt += `► **LỜI BÀN VỀ TÌNH DUYÊN / HÔN NHÂN:**\n`;
+                            if (isChuXung) txt += `- 💔 **LỤC XUNG:** Hôn nhân kỵ Lục Xung. Tình cảm dễ tan vỡ, mau đến mau đi.\n`;
+                            if (isChuHop) txt += `- 💞 **LỤC HỢP:** Sự gắn kết, hòa hợp, dễ trở thành lương duyên.\n`;
+
+                            if (theLine && ungLine) {
+                                txt += `- **Tương quan hai bên (Thế - Ứng):**\n`;
+                                if (ELEMENTS_RELATION[theLine.element].sinh === ungLine.element) txt += `+ Thế sinh Ứng: Mình yêu thương, nhường nhịn đối phương nhiều hơn.\n`;
+                                else if (ELEMENTS_RELATION[ungLine.element].sinh === theLine.element) txt += `+ Ứng sinh Thế: Đối phương có tình ý, quan tâm tốt cho mình.\n`;
+                                else if (theLine.element === ungLine.element) txt += `+ Thế Ứng Tỷ Hòa: Tâm đầu ý hợp, môn đăng hộ đối.\n`;
+                                else if (ELEMENTS_RELATION[theLine.element].khac === ungLine.element) txt += `+ Thế khắc Ứng: Mình có xu hướng áp đặt đối phương.\n`;
+                                else if (ELEMENTS_RELATION[ungLine.element].khac === theLine.element) txt += `+ Ứng khắc Thế: Đối phương gây áp lực, cản trở.\n`;
+                            }
+
+                            let hasTdText = false;
+                            if (chuDeType === 'TD_NAM') {
+                                if (kyDong) { txt += `- ❌ **BẤT LỢI:** Huynh Đệ phát động. Chủ về có người tranh giành (tình địch).\n`; hasTdText = true; }
+                                if (dtLine && (dtLine.thucLuc.includes("MẠNH") || dtLine.isDong)) { txt += `- 🌟 **CÁT LỢI:** Hào Thê Tài vượng tướng. Duyên phận tốt đẹp, người nữ hiền thục.\n`; hasTdText = true; }
+                                else if (dtLine && dtLine.isTKhong) { txt += `- ⏳ Hào Thê Tài Tuần Không: Tình duyên chưa thật, còn ảo mộng.\n`; hasTdText = true; }
+                            } 
+                            else if (chuDeType === 'TD_NU') {
+                                const tuTonLine = aChuLines.find(l => l.lucThan === 'Tử Tôn');
+                                if (tuTonLine && (tuTonLine.isDong || tuTonLine.thucLuc.includes("MẠNH"))) { txt += `- ❌ **BẤT LỢI:** Hào Tử Tôn phát động (Khắc Quan Quỷ). Tình duyên lận đận, hay cãi vã.\n`; hasTdText = true; }
+                                if (dtLine && (dtLine.thucLuc.includes("MẠNH") || dtLine.isDong)) { txt += `- 🌟 **CÁT LỢI:** Hào Quan Quỷ vượng tướng. Duyên phận tốt đẹp vững chắc.\n`; hasTdText = true; }
+                                if (theLine.lucThan === 'Quan Quỷ') { txt += `- 💍 **QUAN QUỶ TRÌ THẾ:** Lương duyên tự tìm đến cửa.\n`; hasTdText = true; }
+                            }
+
+                            // FALLBACK CHO TÌNH DUYÊN
+                            if (!hasTdText) {
+                                txt += `- ⚖️ Tình duyên hiện tại ở mức bình hòa, chưa có xung đột lớn nhưng cũng chưa quá nồng nhiệt. Cần thời gian bồi đắp và tìm hiểu lẫn nhau.\n`;
+                            }
+                        }
+                        else if (chuDeType === 'TL_GIACMO') {
+                            txt += `► **LỜI BÀN VỀ GIẤC MƠ / ĐIỀM BÁO KỲ LẠ:**\n`;
+                            let hasGiacMoText = false;
+
+                            if (kyDong) {
+                                txt += `- ⚠️ **ĐIỀM HUNG:** Kỵ thần động khắc Thế. Cảnh báo sắp có hao tài, tai nạn hoặc tiểu nhân ám hại.\n`;
+                                hasGiacMoText = true;
+                            } else if (dtLine && (dtLine.isTKhong || dtLine.thucLuc.includes("VÔ DỤNG") || dtLine.thucLuc.includes("CHÂN KHÔNG"))) {
+                                txt += `- 🌫️ **MỘNG ẢO:** Hào Quan Quỷ vô khí hoặc Tuần Không. Chỉ do mỏi mệt sinh ra ảo giác, không có điềm báo.\n`;
+                                hasGiacMoText = true;
+                            } else if (dtLine && (dtLine.thucLuc.includes("MẠNH") || dtLine.isDong)) {
+                                txt += `- 🔮 **CÓ LÝ DO:** Giấc mơ có linh ứng thực sự.\n`;
+                                if (ELEMENTS_RELATION[dtLine.element].sinh === theLine.element) txt += `+ Quan Quỷ sinh Thế: Sắp có tin vui về công danh, lộc lá bất ngờ.\n`;
+                                else txt += `+ Quan Quỷ vượng khắc Thế: Đề phòng sức khỏe, bệnh tật hoặc rắc rối thị phi.\n`;
+                                hasGiacMoText = true;
+                            }
+
+                            // FALLBACK CHO GIẤC MƠ
+                            if (!hasGiacMoText) {
+                                txt += `- ⚖️ Giấc mơ/Điềm báo này bình thường, không mang sát khí hay cát tinh nổi trội. Bạn không cần quá lo lắng vướng bận.\n`;
+                            }
+                        } 
+                        else if (chuDeType === 'TL_TAMA' || chuDeType === 'TL_VONGNHAP') {
+                            txt += `► **LỜI BÀN VỀ TÂM LINH / TÀ MA / VONG NHẬP:**\n`;
+                            let hasTaMa = false;
+                            
+                            if (dtLine && (dtLine.thucLuc.includes("MẠNH") || dtLine.isDong)) {
+                                txt += `- 👻 **CÓ ÂM KHÍ:** Hào Quan Quỷ đang vượng tướng/phát động. Khí âm đang hiện diện rất mạnh.\n`;
+                                hasTaMa = true;
+                            } else if (dtLine && dtLine.isTKhong) {
+                                txt += `- 🧘 **KHÔNG CÓ TÀ MA:** Quan Quỷ rơi vào Tuần Không. Sự sợ hãi sinh hoang tưởng, chưa có vong linh quấy phá.\n`;
+                                hasTaMa = true;
+                            }
+                            
+                            const tuTonLine = aChuLines.find(l => l.lucThan === 'Tử Tôn');
+                            if (tuTonLine && (tuTonLine.thucLuc.includes("MẠNH") || tuTonLine.isDong)) {
+                                txt += `- 🌟 **CÁCH GIẢI:** Có Tử Tôn vượng trợ giúp. Nếu thỉnh thầy cúng hoặc tự niệm Phật/Chú sẽ xua đuổi được ngay.\n`;
+                            }
+
+                            // FALLBACK
+                            if (!hasTaMa) {
+                                txt += `- ⚖️ Khí trường tâm linh xung quanh ở mức bình thường, âm khí suy yếu không đủ sức gây hại. Tránh suy nghĩ mông lung sinh bất an.\n`;
+                            }
+                        }
+                        else if (chuDeType.startsWith('DT_')) {
+                            txt += `► **LỜI BÀN VỀ PHONG THỦY DƯƠNG TRẠCH (NHÀ Ở):**\n`;
+                            let hasPtText = false;
+                            
+                            if (kyDong) {
+                                txt += `- ❌ **SÁT KHÍ XUNG CHIẾU:** Kỵ thần phát động khắc Phụ Mẫu! Cần tìm cách hóa giải phong thủy gấp.\n`;
+                                hasPtText = true;
+                            }
+                            if (dtLine && (dtLine.thucLuc.includes("MẠNH") || dtLine.isDong)) {
+                                txt += `- 🌟 **PHONG THỦY VƯỢNG:** Trạch vận có sinh khí, mang lại bình an, ổn định cho gia đạo.\n`;
+                                hasPtText = true;
+                            } else if (dtLine && dtLine.isTKhong) {
+                                txt += `- ⚠️ **TRẠCH KHÍ RỖNG:** Dụng thần Tuần Không. Khí trường thất thoát, không tụ khí, làm ăn khó giữ của.\n`;
+                                hasPtText = true;
+                            }
+
+                            // FALLBACK
+                            if (!hasPtText) {
+                                txt += `- ⚖️ Trạch vận và phong thủy nhà ở hiện tại bình hòa. Chưa đắc địa mượng khí, nhưng cũng không bị phạm sát khí. Có thể ở yên ổn.\n`;
+                            }
+                        }
+                        else {
+                            txt += `► **LỜI BÀN TỔNG HỢP (Vấn đề tự chọn):**\n`;
+                            if (dtLine && dtLine.thucLuc.includes("MẠNH")) txt += `- 🌟 Dụng thần vượng tướng, mưu sự hanh thông, sự việc có cơ sở phát triển tốt đẹp.\n`;
+                            else if (dtLine && dtLine.isTKhong) txt += `- ⏳ Dụng thần Tuần Không, vạn sự mưu tính còn ảo mộng, chưa thực tế hoặc chưa đến thời điểm.\n`;
+                            else txt += `- 📉 Dụng thần hưu tù, vạn sự gian nan, cần kiên nhẫn chờ thời gian qua đi.\n`;
+                            
+                            if (kyDong) txt += `- ❌ Kỵ thần phát động, rào cản và tai ương lớn, nên lui bước phòng thủ.\n`;
+                        }
+
+                        txt += `\n⏱️ **THỜI GIAN ỨNG NGHIỆM (ỨNG KỲ):**\n`;
+                        if (dtLine && !dtLine.thucLuc.includes("VÔ DỤNG") && !isPhucThan) {
+                            const chiDt = dtLine.chi;
+                            const xungChi = DIA_CHI_XUNG[chiDt];
+                            const hopChi = DIA_CHI_HOP[chiDt];
+                            if (dtLine.isTKhong) txt += `- Sự việc hiện đang kẹt (Không Vong). Đợi ứng vào ngày/tháng **${chiDt}** (Xuất Không) hoặc **${xungChi}** (Xung Không).\n`;
+                            else if (dtLine.isDong) txt += `- Hào đang động, ứng sự vào ngày/tháng hợp là **${hopChi}**.\n`;
+                            else txt += `- Hào tĩnh vượng, ứng sự vào ngày/tháng xung là **${xungChi}**.\n`;
+                        } else {
+                            txt += `- Quẻ mờ mịt hoặc Dụng thần vô lực, hiện chưa thể xác định được thời gian cụ thể.\n`;
+                        }
+                        
+                    } else {
+                        txt += `[PHÂN TÍCH MAI HOA DỊCH SỐ]\n`;
+                        txt += `Vấn sự: "**${finalMucDich}**" (Lập theo ${tietKhi})\n`;
+                        txt += `==============================================\n\n`;
+                        
+                        txt += `- Thể Quái: **${theQuai.name} (${theQuai.element})** - Đại diện cho bản thân / Gia chủ.\n`;
+                        txt += `- Dụng Quái: **${dungQuai.name} (${dungQuai.element})** - Đại diện cho Đối tác / Sự việc.\n\n`;
+                        
+                        const maiHoaLogicResult = EngineLuanMaiHoa(activeCategory, theQuai.element, dungQuai.element);
+                        txt += maiHoaLogicResult;
+                    }
+                    
+                    txt += `\n> *Dịch Sư: Tận nhân lực, tri thiên mệnh. Cát hung nhờ vào tu tâm dưỡng tính!*`;
+
+                    setLuanGiaiText(txt); 
+                    setIsGenerating(false);
+                    
+                    setTimeout(() => { 
+                        const resultEl = document.getElementById('luan-giai-result-section'); 
+                        if(resultEl) { 
+                            resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+                        } 
+                    }, 300);
+                    
+                    showNotification("Dịch Sư đã luận giải xong!");
+                }, 1000);
+            };
+
+            const handleExportImage = () => {
+                const captureArea = document.getElementById('pdf-render-zone'); 
+                if (!captureArea) return;
+                
+                setIsExporting(true); 
+                showNotification("Đang xuất ảnh lá quẻ...");
+                captureArea.classList.add('export-mode');
+
+                html2canvas(captureArea, { 
+                    scale: 3, 
+                    useCORS: true, 
+                    backgroundColor: '#fdfaf2',
+                    scrollY: -window.scrollY
+                }).then(canvas => { 
+                    captureArea.classList.remove('export-mode'); 
+                    const labelFile = systemType === 'luchao' ? `ThienCoTuuKhach-LucHao` : `ThienCoTuuKhach-MaiHoa`;
+                    const link = document.createElement('a');
+                    link.download = `La-Que-${labelFile.replace(/\s+/g, '-')}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                    setIsExporting(false); 
+                    showNotification("Tải ảnh thành công!"); 
+                }).catch(err => { 
+                    console.error("Lỗi xuất ảnh:", err); 
+                    captureArea.classList.remove('export-mode'); 
+                    setIsExporting(false); 
+                    showNotification("Có lỗi khi xuất ảnh."); 
+                });
+            };
+
+            return (
+                <div className="max-w-7xl mx-auto flex flex-col items-center pb-12 px-2 sm:px-4 relative">
+                    
+                    {notification && (
+                        <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-5 py-3 rounded-full shadow-2xl z-50 flex items-center gap-3 transition-all duration-300">
+                            <i className="fa-solid fa-info-circle text-amber-400"></i>
+                            <span className="text-sm font-medium">{notification}</span>
+                        </div>
+                    )}
+
+                    <div className="w-full max-w-[900px] bg-amber-900 text-amber-50 p-4 rounded-xl shadow-lg flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 mt-4 no-print">
+                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('setup')}>
+                            <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-amber-900 font-bold text-xl">☯</div>
+                            <div>
+                                <h1 className="text-lg sm:text-xl font-bold uppercase serif-title tracking-wider rainbow-text">THIÊN CƠ TỬU KHÁCH</h1>
+                                <p className="text-xs text-amber-200">Chuyên sâu Cầu Tài - Tình Duyên - Phong Thủy - Tâm Linh</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2 w-full sm:w-auto justify-center">
+                            <button onClick={() => setView('setup')} className={`px-6 py-2 text-sm font-bold rounded-lg transition-all flex justify-center items-center gap-2 ${view === 'setup' ? 'bg-[#a91d1d] text-white shadow' : 'bg-amber-800 text-amber-200 hover:text-white'}`}>
+                                <i className="fa-solid fa-plus"></i> Soạn Quẻ Mới
+                            </button>
+                        </div>
+                    </div>
+
+                    {view === 'setup' && (
+                        <div className="w-full max-w-[900px] grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div className="lg:col-span-5 bg-white p-5 rounded-2xl shadow-xl border border-amber-200 flex flex-col gap-5">
+                                <div className="flex bg-amber-100 p-1 rounded-lg w-full">
+                                    <button onClick={() => setSystemType('luchao')} className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${systemType === 'luchao' ? 'bg-white text-[#a91d1d] shadow' : 'text-amber-800 hover:bg-amber-50'}`}>
+                                        LỤC HÀO
+                                    </button>
+                                    <button onClick={() => setSystemType('maihoa')} className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${systemType === 'maihoa' ? 'bg-white text-[#a91d1d] shadow' : 'text-amber-800 hover:bg-amber-50'}`}>
+                                        MAI HOA
+                                    </button>
+                                </div>
+
+                                <div className="border border-amber-100 p-4 rounded-xl bg-amber-50/50 shadow-inner">
+                                    <label className="text-sm font-bold text-amber-900 uppercase flex items-center gap-2 mb-3">
+                                        <i className="fa-solid fa-compass"></i> Chọn Vấn Sự Cần Xem
+                                    </label>
+                                    
+                                    <div className="flex overflow-x-auto hide-scrollbar gap-2 mb-3 pb-2 border-b border-amber-200">
+                                        {CATEGORIES.map(cat => (
+                                            <button 
+                                                key={cat.id} 
+                                                onClick={() => setActiveCategory(cat.id)}
+                                                className={`whitespace-nowrap px-3 py-1.5 text-xs font-bold rounded-full transition-all ${activeCategory === cat.id ? 'bg-amber-800 text-white shadow' : 'bg-white border border-amber-200 text-amber-800 hover:bg-amber-100'}`}
+                                            >
+                                                {cat.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    
+                                    <div className="flex flex-col gap-2 mb-4 max-h-[180px] overflow-y-auto pr-2">
+                                        {CATEGORIES.find(c => c.id === activeCategory).items.map((item, idx) => {
+                                            const itemRoles = (item.dungThan !== 'Thế' && item.dungThan !== 'Ứng') ? getPhuTroThan(item.dungThan) : null;
+                                            return (
+                                            <div 
+                                                key={idx} 
+                                                onClick={() => handleTopicSelect(item)}
+                                                className={`cursor-pointer p-2 rounded-lg border flex flex-col gap-1.5 transition-all ${!isCustomTopic && selectedTopic.name === item.name ? 'bg-red-50 border-red-300 shadow-sm' : 'bg-white border-gray-200 hover:border-amber-400'}`}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <div className={`w-6 text-center ${!isCustomTopic && selectedTopic.name === item.name ? 'text-[#a91d1d]' : 'text-gray-400'}`}><i className={`fa-solid ${item.icon}`}></i></div>
+                                                    <span className={`text-[12px] font-bold ${!isCustomTopic && selectedTopic.name === item.name ? 'text-[#a91d1d]' : 'text-gray-700'}`}>{item.name}</span>
+                                                </div>
+                                                {systemType === 'luchao' && (
+                                                    <div className="flex flex-wrap gap-1 pl-8">
+                                                        <span className={`text-[9px] px-1.5 py-0.5 rounded border font-bold ${VAI_TRO_BADGE_STYLE["Dụng"]}`}>Dụng: {item.dungThan}</span>
+                                                        {itemRoles && (
+                                                            <>
+                                                                <span className={`text-[9px] px-1.5 py-0.5 rounded border font-bold ${VAI_TRO_BADGE_STYLE["Nguyên"]}`}>Nguyên: {itemRoles.nguyen}</span>
+                                                                <span className={`text-[9px] px-1.5 py-0.5 rounded border font-bold ${VAI_TRO_BADGE_STYLE["Kỵ"]}`}>Kỵ: {itemRoles.ky}</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            );
+                                        })}
+                                    </div>
+                                    
+                                    <div className="relative pt-2">
+                                        <div className="absolute -top-3 left-4 bg-amber-50 px-2 text-[10px] font-bold text-gray-400">Hoặc tự nhập vấn sự</div>
+                                        <div className="flex flex-col gap-2">
+                                            <input 
+                                                type="text" 
+                                                value={customMucDich}
+                                                onChange={handleCustomTopicChange}
+                                                onClick={() => setIsCustomTopic(true)}
+                                                placeholder="VD: Kiểm tra tình cảm đôi bên năm nay..." 
+                                                className={`w-full border rounded-lg p-2.5 text-sm outline-none transition-all ${isCustomTopic ? 'border-[#a91d1d] bg-white shadow-inner font-bold text-[#a91d1d]' : 'border-amber-200 bg-white text-gray-500 hover:border-amber-400'}`}
+                                            />
+                                            {isCustomTopic && systemType === 'luchao' && (
+                                                <div className="flex items-center gap-2 bg-red-50 p-2 rounded border border-red-100">
+                                                    <span className="text-xs font-bold text-red-800">Chọn Dụng Thần:</span>
+                                                    <select value={customDungThan} onChange={e => setCustomDungThan(e.target.value)} className="flex-1 bg-white border border-red-200 rounded p-1 text-xs font-bold text-gray-700 outline-none">
+                                                        <option value="Phụ Mẫu">Nhà cửa / Mồ mả / Bố mẹ (Phụ Mẫu)</option>
+                                                        <option value="Quan Quỷ">Người nam / Tà ma / Bệnh (Quan Quỷ)</option>
+                                                        <option value="Thê Tài">Kinh doanh / Tiền bạc / Vợ (Thê Tài)</option>
+                                                        <option value="Tử Tôn">Con cái / Giếng nước / Phúc (Tử Tôn)</option>
+                                                        <option value="Ứng">Đối tác / Vợ chồng / Hôn nhân chung (Ứng)</option>
+                                                        <option value="Thế">Bản thân người hỏi (Thế)</option>
+                                                    </select>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h3 className="text-sm font-bold text-amber-900 uppercase flex items-center gap-2">
+                                            <i className="fa-solid fa-clock"></i> Thời điểm lập quẻ
+                                        </h3>
+                                        <button onClick={thietLapGioHienTai} className="text-[11px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-1.5 px-3 rounded shadow-sm border border-amber-200 flex items-center gap-1">
+                                            <i className="fa-solid fa-rotate"></i> Giờ hiện tại
+                                        </button>
+                                    </div>
+                                    <div className="bg-white border border-amber-100 rounded-lg p-3 shadow-sm space-y-3">
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div><label className="text-[10px] text-gray-500 font-bold mb-1 block">Dương Lịch</label><input type="date" value={solarDate} onChange={e => setSolarDate(e.target.value)} className="w-full border border-gray-300 rounded p-1.5 text-sm bg-gray-50 outline-none focus:border-amber-400 font-bold text-blue-900" /></div>
+                                            <div><label className="text-[10px] text-gray-500 font-bold mb-1 block">Giờ (Dương)</label><input type="time" value={solarTime} onChange={e => setSolarTime(e.target.value)} className="w-full border border-gray-300 rounded p-1.5 text-sm bg-gray-50 outline-none focus:border-amber-400 font-bold text-blue-900" /></div>
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] text-gray-500 font-bold mb-1 block">Âm Lịch (Tự động tính)</label>
+                                            <div className="flex gap-2 items-center">
+                                                <input type="number" value={lunarDay} readOnly className="w-1/3 border border-gray-300 rounded p-1.5 text-sm bg-gray-100 outline-none text-center text-gray-500" />
+                                                <input type="number" value={lunarMonth} readOnly className="w-1/3 border border-gray-300 rounded p-1.5 text-sm bg-gray-100 outline-none text-center text-gray-500" />
+                                                <input type="number" value={lunarYear} readOnly className="w-1/3 border border-gray-300 rounded p-1.5 text-sm bg-gray-100 outline-none text-center text-gray-500" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] text-gray-500 font-bold mb-1 block">Tiết Khí</label>
+                                            <select value={tietKhi} onChange={e => setTietKhi(e.target.value)} className="w-full border border-gray-300 rounded p-1.5 text-sm bg-white outline-none focus:border-amber-400 text-amber-900 font-bold">{TIET_KHI_LIST.map(t => <option key={t} value={t}>{t}</option>)}</select>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg shadow-inner relative">
+                                        <p className="text-xs font-bold text-[#a91d1d] mb-2 uppercase flex items-center gap-2"><i className="fa-solid fa-table-cells"></i> Can Chi Trạch Nhật</p>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="flex flex-col gap-1"><label className="text-[10px] text-gray-500 font-bold text-center border-b border-amber-200 pb-1 mb-1">Năm</label><div className="flex gap-1"><select value={yearCan} onChange={e => setYearCan(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-gray-700 text-center">{THIEN_CAN.map(c => <option key={c} value={c}>{c}</option>)}</select><select value={yearChi} onChange={e => setYearChi(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-gray-700 text-center">{DIA_CHI.map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
+                                            <div className="flex flex-col gap-1"><label className="text-[10px] text-gray-500 font-bold text-center border-b border-amber-200 pb-1 mb-1">Tháng (Ng.Lệnh)</label><div className="flex gap-1"><select value={monthCan} onChange={e => setMonthCan(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-emerald-800 text-center">{THIEN_CAN.map(c => <option key={c} value={c}>{c}</option>)}</select><select value={monthChi} onChange={e => setMonthChi(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-emerald-800 text-center">{DIA_CHI.map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
+                                            <div className="flex flex-col gap-1"><label className="text-[10px] text-gray-500 font-bold text-center border-b border-amber-200 pb-1 mb-1">Ngày (Nh.Thần)</label><div className="flex gap-1"><select value={dayCan} onChange={e => setDayCan(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-[#a91d1d] text-center">{THIEN_CAN.map(c => <option key={c} value={c}>{c}</option>)}</select><select value={dayChi} onChange={e => setDayChi(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-[#a91d1d] text-center">{DIA_CHI.map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
+                                            <div className="flex flex-col gap-1"><label className="text-[10px] text-gray-500 font-bold text-center border-b border-amber-200 pb-1 mb-1">Giờ</label><div className="flex gap-1"><select value={hourCan} onChange={e => setHourCan(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-gray-700 text-center">{THIEN_CAN.map(c => <option key={c} value={c}>{c}</option>)}</select><select value={hourChi} onChange={e => setHourChi(e.target.value)} className="w-1/2 border rounded p-1 text-xs bg-white outline-none font-bold text-gray-700 text-center">{DIA_CHI.map(c => <option key={c} value={c}>{c}</option>)}</select></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {systemType === 'luchao' && (
+                                    <div className="border-t border-amber-100 pt-3 flex flex-col gap-3 relative">
+                                        <div className="flex items-center justify-between mb-1">
+                                            <h3 className="text-sm font-bold text-amber-900 uppercase flex items-center gap-2"><i className="fa-solid fa-bars-staggered"></i> Thiết lập Lục Hào</h3>
+                                            <button onClick={handleGieoQueTuDong} className="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded text-[11px] font-bold shadow transition-colors flex items-center gap-1.5">
+                                                <i className="fa-solid fa-coins"></i> Gieo Bằng Đồng Xu
+                                            </button>
+                                        </div>
+                                        <div><label className="text-[11px] font-bold text-gray-600 block mb-1">Thượng Quái:</label><select value={upperId} onChange={e => setUpperId(parseInt(e.target.value))} className="w-full border border-gray-300 rounded p-2 text-sm bg-white outline-none focus:border-amber-400 font-bold">{BAT_QUAI.map(q => <option key={q.id} value={q.id}>{q.name} {q.symbol} (Hành {q.element})</option>)}</select></div>
+                                        <div><label className="text-[11px] font-bold text-gray-600 block mb-1">Hạ Quái:</label><select value={lowerId} onChange={e => setLowerId(parseInt(e.target.value))} className="w-full border border-gray-300 rounded p-2 text-sm bg-white outline-none focus:border-amber-400 font-bold">{BAT_QUAI.map(q => <option key={q.id} value={q.id}>{q.name} {q.symbol} (Hành {q.element})</option>)}</select></div>
+                                        <div>
+                                            <label className="text-[11px] font-bold text-gray-600 block mb-1.5">Chọn tay Hào Động (nếu không gieo tự động):</label>
+                                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">{[0, 1, 2, 3, 4, 5].map(idx => (<button key={idx} onClick={() => toggleHaoDong(idx)} className={`py-1.5 text-xs font-bold rounded border transition-colors ${moving[idx] ? 'bg-red-600 border-red-700 text-white shadow-inner' : 'bg-white text-gray-700 border-gray-300 hover:bg-amber-100'}`}>Hào {idx + 1}</button>))}</div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {systemType === 'maihoa' && (
+                                    <div className="border-t border-amber-100 pt-3 flex flex-col gap-3">
+                                        <h3 className="text-sm font-bold text-amber-900 uppercase flex items-center gap-2 mb-1"><i className="fa-solid fa-wand-magic-sparkles"></i> Thiết lập số Mai Hoa</h3>
+                                        <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 shadow-sm"><label className="text-[12px] font-bold text-amber-900 block mb-1.5"><i className="fa-solid fa-keyboard text-green-700 mr-1"></i> Nhập Số Đoán Quẻ</label><input type="text" placeholder="VD: 0981234567" value={serialString} onChange={e => handleSerialChange(e.target.value)} className="w-full border border-amber-300 rounded p-2 text-sm outline-none bg-white focus:border-red-500 font-bold tracking-wide"/></div>
+                                        <div className="grid grid-cols-3 gap-2 mt-1">
+                                            <div><label className="text-[11px] font-bold text-gray-600 block mb-1">Thượng:</label><input type="number" min="1" value={numUpper} onChange={e => setNumUpper(e.target.value)} className="w-full border rounded p-1.5 text-sm outline-none bg-amber-50/50 text-center font-bold" /><span className="text-[10px] text-gray-500 font-bold text-[#a91d1d] block text-center mt-1">{mhUpperQuai.name} ({mhUpperQuai.number})</span></div>
+                                            <div><label className="text-[11px] font-bold text-gray-600 block mb-1">Hạ:</label><input type="number" min="1" value={numLower} onChange={e => setNumLower(e.target.value)} className="w-full border rounded p-1.5 text-sm outline-none bg-amber-50/50 text-center font-bold" /><span className="text-[10px] text-gray-500 font-bold text-[#a91d1d] block text-center mt-1">{mhLowerQuai.name} ({mhLowerQuai.number})</span></div>
+                                            <div><label className="text-[11px] font-bold text-gray-600 block mb-1">H.Động:</label><input type="number" min="1" max="6" value={numMoving} onChange={e => setNumMoving(e.target.value)} className="w-full border rounded p-1.5 text-sm outline-none bg-amber-50/50 text-center font-bold text-red-600" /><span className="text-[10px] text-gray-500 font-bold text-red-600 block text-center mt-1">Động Hào {mhHaoDong}</span></div>
+                                        </div>
+                                    </div>
+                                )}
+                                <button onClick={handleSetupSubmit} className="w-full mt-2 bg-[#a91d1d] hover:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-lg uppercase text-sm flex items-center justify-center gap-2 transition transform active:scale-95 border-b-4 border-red-900"><i className="fa-solid fa-yin-yang animate-spin"></i> XEM LÁ QUẺ</button>
+                            </div>
+
+                            <div className="lg:col-span-7 bg-white p-6 rounded-2xl shadow-xl border border-amber-200 hidden lg:block">
+                                <h3 className="text-md font-bold text-amber-900 uppercase border-b pb-2 mb-4">Hình quẻ xem trước</h3>
+                                <div className="flex flex-col items-center bg-amber-50/50 p-6 rounded-xl border border-dashed border-amber-200 min-h-[500px] justify-center">
+                                    <p className="text-gray-500 text-sm italic">Bấm "XEM LÁ QUẺ" ở bên trái để qua phần luận giải chi tiết.</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {view === 'result' && (
+                        <div className="w-full flex flex-col items-center">
+                            
+                            <div className="w-full max-w-[900px] flex flex-wrap justify-center items-center mb-6 px-1 gap-4 no-print">
+                                <button onClick={generateSystemInterpretation} disabled={isGenerating} className={`w-full sm:w-auto bg-[#8b1c1c] hover:bg-[#6b1515] text-amber-50 text-sm font-bold py-3 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 border border-[#d4af37] transition-all ${isGenerating ? 'opacity-70' : ''}`}>
+                                    {isGenerating ? <i className="fa-solid fa-spinner animate-spin text-[#d4af37]"></i> : <i className="fa-solid fa-scroll text-[#d4af37]"></i>} {isGenerating ? 'Đang Luận Giải...' : 'Tự Động Luận Giải'}
+                                </button>
+                                <button onClick={handleExportImage} disabled={isExporting} className="w-full sm:w-auto bg-amber-700 hover:bg-amber-800 text-white text-sm font-bold py-3 px-6 rounded-lg shadow-md flex items-center justify-center gap-2 transition-all">
+                                    {isExporting ? <i className="fa-solid fa-spinner animate-spin"></i> : <i className="fa-solid fa-image"></i>} {isExporting ? 'Đang tải ảnh...' : 'Tải Lá Quẻ (Ảnh)'}
+                                </button>
+                            </div>
+
+                            <div className="export-container relative shadow-xl rounded-md bg-[#e5dfd3] p-1 w-full max-w-[920px]">
+                                <div id="pdf-render-zone" className="la-que-bg p-2 sm:p-4 pb-2 relative rounded-sm mx-auto flex flex-col">
+                                    
+                                    <div className="text-center mb-2">
+                                        <h1 className="text-[18px] sm:text-[22px] font-bold uppercase tracking-widest serif-title rainbow-text mt-1">
+                                            {systemType === 'luchao' ? 'LÁ QUẺ THIÊN CƠ - LỤC HÀO' : 'LÁ QUẺ THIÊN CƠ - MAI HOA'}
+                                        </h1>
+                                        <div className="w-40 h-[1px] bg-[#d4af37] mx-auto mt-1 mb-1.5"></div>
+                                        <div className="flex justify-center">
+                                            <span className="bg-[#a91d1d] text-white px-2 py-0.5 rounded-full text-[8px] sm:text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 shadow-sm">
+                                                <i className="fa-solid fa-crosshairs"></i> Vấn sự: {isCustomTopic ? customMucDich : selectedTopic.name}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-[9px] sm:text-[11px] document-text text-gray-800 mb-2 px-1">
+                                        <div className="flex justify-between border-b border-gray-300 pb-1 mb-1">
+                                            <div><span className="text-gray-500">Thời điểm:</span> <span className="font-bold ml-1">{solarTime} {solarDate ? solarDate.split('-').reverse().join('/') : ''}</span></div>
+                                            <div><span className="text-gray-500">Âm Lịch:</span> <span className="font-bold text-indigo-900 ml-1">giờ {hourChi}, ngày {lunarDay}/{lunarMonth}/{lunarYear}</span></div>
+                                        </div>
+                                        <div className="border-b border-gray-300 pb-1 mb-1 flex gap-1">
+                                            <span className="text-gray-500 whitespace-nowrap">Can Chi:</span>
+                                            <span className="font-bold uppercase text-amber-900">Giờ {hourCan} {hourChi}, Ngày {dayCan} {dayChi}, Tháng {monthCan} {monthChi}, Năm {yearCan} {yearChi}</span>
+                                        </div>
+                                        <div className="flex justify-between pb-1">
+                                            <div><span className="text-gray-500">Tiết khí:</span> <span className="font-bold text-teal-800 ml-1">{tietKhi}</span></div>
+                                            <div><span className="text-gray-500">Nhật thần:</span> <span className="font-extrabold text-[#a91d1d] ml-1">{dayChi}-{layTienChi(dayChi)}</span></div>
+                                            <div><span className="text-gray-500">Nguyệt lệnh:</span> <span className="font-extrabold text-[#a91d1d] ml-1">{monthChi}-{layTienChi(monthChi)}</span></div>
+                                        </div>
+                                    </div>
+
+                                    {systemType === 'luchao' && (
+                                        <div className="w-full border-t border-amber-300 pt-2">
+                                            <div className="flex flex-row justify-around items-center px-1 mb-2">
+                                                <div className="flex flex-col items-center w-[45%]">
+                                                    <h2 className="text-[12px] sm:text-[14px] font-extrabold text-[#a91d1d] uppercase serif-title tracking-wide text-center">{chuName}</h2>
+                                                    <BigHexagram lines={chuLines} className="w-8 sm:w-10 space-y-[2px] sm:space-y-[3px] my-1" lineClass="h-[3px] sm:h-[4px]" />
+                                                    <p className="text-[8px] sm:text-[9px] font-bold text-gray-700 text-center uppercase">CUNG {chuCungName}</p>
+                                                </div>
+                                                <div className="flex flex-col items-center text-gray-400 font-bold text-[8px] sm:text-[10px]">
+                                                    <span>BIẾN</span><span className="text-lg text-[#a91d1d]">→</span>
+                                                </div>
+                                                <div className="flex flex-col items-center w-[45%]">
+                                                    <h2 className="text-[12px] sm:text-[14px] font-extrabold text-[#a91d1d] uppercase serif-title tracking-wide text-center">{bienName}</h2>
+                                                    <BigHexagram lines={bienLines} className="w-8 sm:w-10 space-y-[2px] sm:space-y-[3px] my-1" lineClass="h-[3px] sm:h-[4px]" />
+                                                    <p className="text-[8px] sm:text-[9px] font-bold text-gray-700 text-center uppercase">CUNG {bienCungName}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="text-center font-bold text-[8px] sm:text-[10px] uppercase tracking-wider text-[#a91d1d] mb-1.5 bg-[#f4ebd0] py-1 px-2 border-y border-[#d4af37] shadow-sm">
+                                                Tượng ý: {chuThoan}
+                                            </div>
+
+                                            <div className="mb-1.5 w-full">
+                                                <table className="w-full text-[8px] sm:text-[10px] text-center border-collapse bg-white border border-[#e5d3b3]">
+                                                    <thead>
+                                                        <tr className="bg-[#f4ebd0] border-b border-[#d4af37]">
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[6%]">Hào</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[6%]">T/Ư</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[12%]">L.Thân</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">Can Chi</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[12%]">P.Thần</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-red-700 w-[4%]">TK</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[12%]">L.Thân(B)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">Can Chi(B)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[10%]">Lục Thú</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-red-700 w-[4%]">TK</th>
+                                                            <th className="py-[3px] px-0.5 font-bold text-amber-900 w-[6%]">Hào</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {(() => { const activeDungThan = isCustomTopic ? customDungThan : (selectedTopic ? selectedTopic.dungThan : null); return chuLines.slice().reverse().map((line, revIdx) => {
+                                                            const idx = 5 - revIdx;
+                                                            const isThe = (chuTheHao === idx + 1); 
+                                                            const isUng = (chuUngHao === idx + 1); 
+                                                            const isMoving = moving[idx];
+                                                            const pf = mapPhuc[idx]; 
+                                                            const bLine = bienLines[idx];
+                                                            
+                                                            const elColor = getElementColor(line.element); 
+                                                            const bElColor = getElementColor(bLine.element);
+                                                            const tkChu = layThandSat(idx, line.chi, line.lucThan).includes("Tuần không");
+                                                            const tkBien = isMoving ? layThandSat(idx, bLine.chi, bLine.lucThan).includes("Tuần không") : false;
+                                                            const vaiTroChu = getVaiTroLucThan(line.lucThan, activeDungThan);
+
+                                                            return (
+                                                                <tr key={idx} className="border-b border-[#e5d3b3]">
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3]"><TableHaoSymbol binary={line.binary} isMoving={isMoving} /></td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3]">{isThe ? <span className="text-red-600 font-bold border border-red-200 rounded-[2px] px-[2px] bg-red-50 text-[7px] sm:text-[9px]">Thế</span> : (isUng ? <span className="text-emerald-600 font-bold border border-emerald-200 rounded-[2px] px-[2px] bg-emerald-50 text-[7px] sm:text-[9px]">Ứng</span> : <span className="text-gray-300">-</span>)}</td>
+                                                                    <td className={`py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold ${isMoving ? 'text-red-600' : 'text-gray-800'}`}>
+                                                                        {line.lucThan}
+                                                                        {vaiTroChu && <span className={`block mt-0.5 mx-auto w-fit text-[6px] sm:text-[7px] leading-tight px-1 rounded border font-bold ${VAI_TRO_BADGE_STYLE[vaiTroChu]}`}>{vaiTroChu}</span>}
+                                                                    </td>
+                                                                    <td className={`py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold ${isMoving ? 'text-red-600' : elColor}`}>{line.chi}-{line.element}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] text-gray-600">{pf ? <span className="font-semibold text-amber-800">{pf.lucThan.split(' ')[0]}-{pf.chi}</span> : "-"}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] text-red-600 font-bold">{tkChu ? 'K' : '-'}</td>
+                                                                    <td className={`py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-gray-800`}>{isMoving ? bLine.lucThan : "-"}</td>
+                                                                    <td className={`py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold ${bElColor}`}>{isMoving ? `${bLine.chi}-${bLine.element}` : "-"}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-purple-800">{lucThuLineList[idx]}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] text-red-600 font-bold">{tkBien ? 'K' : '-'}</td>
+                                                                    <td className="py-[3px] px-0.5"><TableHaoSymbol binary={bLine.binary} isMoving={false} /></td>
+                                                                </tr>
+                                                            );
+                                                        }); })()}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div className="mb-0 w-full">
+                                                <table className="w-full text-[8px] sm:text-[10px] text-center border-collapse bg-white border border-[#e5d3b3]">
+                                                    <thead>
+                                                        <tr className="bg-[#f4ebd0] border-b border-[#d4af37]">
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">Hào (Chủ)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">V-S (Tháng)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">Nhật Thần</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[16%]">T.Sinh (Ngày)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[14%]">Hào (Biến)</th>
+                                                            <th className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-amber-900 w-[13%]">V-S Biến</th>
+                                                            <th className="py-[3px] px-0.5 font-bold text-amber-900 w-[15%]">T.Sinh Biến</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {chuLines.slice().reverse().map((line, revIdx) => {
+                                                            const idx = 5 - revIdx;
+                                                            const isMoving = moving[idx];
+                                                            const bLine = bienLines[idx];
+                                                            
+                                                            const v_s = checkVuongSuy(line.element, monthChi);
+                                                            const ts_ngay = TR_SINH_MAP[line.element][dayChi];
+                                                            
+                                                            let tinhTrang = v_s;
+                                                            if (DIA_CHI_XUNG[monthChi] === line.chi) tinhTrang = "Ng.Phá";
+                                                            else if (DIA_CHI_XUNG[dayChi] === line.chi) {
+                                                                tinhTrang = ["Vượng", "Tướng"].includes(v_s) ? "Ám Động" : "Nhật Phá";
+                                                            }
+                                                            
+                                                            const isMoMonth = TR_SINH_MAP[line.element][monthChi] === "Mộ";
+                                                            const isMoDay = TR_SINH_MAP[line.element][dayChi] === "Mộ";
+                                                            if(isMoMonth || isMoDay) tinhTrang = "Nhập Mộ";
+
+                                                            const b_vs = isMoving ? checkVuongSuy(bLine.element, monthChi) : "-";
+                                                            const b_ts = isMoving ? TR_SINH_MAP[bLine.element][dayChi] : "-";
+
+                                                            return (
+                                                                <tr key={idx} className="border-b border-[#e5d3b3]">
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-gray-800">{line.can} {line.chi}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3]">{tinhTrang === "Ng.Phá" ? <span className="text-red-600 font-bold">Nguyệt Phá</span> : (tinhTrang==="Nhập Mộ"? <span className="text-gray-500 font-bold">Nhập Mộ</span> : <span className={getVuongSuyColor(v_s)}>{v_s}</span>)}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3]">{tinhTrang === "Nhật Phá" ? <span className="text-red-600 font-bold">Nhật Phá</span> : (tinhTrang === "Ám Động" ? <span className="text-purple-600 font-bold">Ám Động</span> : <span className="text-gray-300">-</span>)}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] text-gray-700">{ts_ngay}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3] font-bold text-gray-800">{isMoving ? `${bLine.can} ${bLine.chi}` : "-"}</td>
+                                                                    <td className="py-[3px] px-0.5 border-r border-[#e5d3b3]">{isMoving ? <span className={getVuongSuyColor(b_vs)}>{b_vs}</span> : "-"}</td>
+                                                                    <td className="py-[3px] px-0.5 text-gray-700">{b_ts}</td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {systemType === 'maihoa' && (
+                                        <div className="w-full border-t border-amber-300 pt-2 mb-1">
+                                            <div className="flex flex-row justify-between items-start px-2 mb-2">
+                                                
+                                                <div className="flex flex-col items-center w-[30%]">
+                                                    <span className="text-[10px] text-amber-800 font-bold uppercase mb-1">Khởi Đầu</span>
+                                                    <h2 className="text-[13px] sm:text-[14px] font-extrabold text-[#a91d1d] uppercase serif-title tracking-wide text-center">{mhChuNameFull}</h2>
+                                                    <BigHexagram lines={mhChuLines} className="w-10 sm:w-12 space-y-1 sm:space-y-1.5 my-1.5" lineClass="h-1 sm:h-1.5" />
+                                                    <div className="text-[8px] sm:text-[9px] space-y-0.5 text-center mt-1">
+                                                        <p>Thượng: <span className={`font-bold ${getElementColor(mhUpperQuai.element)}`}>{mhUpperQuai.name}</span> {isDongInUpper ? <span className="text-red-600 font-bold">(Dụng)</span> : <span className="text-emerald-700 font-bold">(Thể)</span>}</p>
+                                                        <p>Hạ: <span className={`font-bold ${getElementColor(mhLowerQuai.element)}`}>{mhLowerQuai.name}</span> {isDongInUpper ? <span className="text-emerald-700 font-bold">(Thể)</span> : <span className="text-red-600 font-bold">(Dụng)</span>}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-col items-center w-[30%] border-x border-dashed border-amber-300 px-1">
+                                                    <span className="text-[10px] text-gray-500 font-bold uppercase mb-1">Quá Trình</span>
+                                                    <h2 className="text-[13px] sm:text-[14px] font-extrabold text-amber-900 uppercase serif-title tracking-wide text-center">{mhHoNameFull}</h2>
+                                                    <BigHexagram lines={mhHoLines} className="w-10 sm:w-12 space-y-1 sm:space-y-1.5 my-1.5" lineClass="h-1 sm:h-1.5" />
+                                                    <div className="text-[8px] sm:text-[9px] space-y-0.5 text-center mt-1 text-gray-600">
+                                                        <p>Thượng: <span className={`font-bold ${getElementColor(hoUpperQuai.element)}`}>{hoUpperQuai.name}</span></p>
+                                                        <p>Hạ: <span className={`font-bold ${getElementColor(hoLowerQuai.element)}`}>{hoLowerQuai.name}</span></p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex flex-col items-center w-[30%]">
+                                                    <span className="text-[10px] text-[#a91d1d] font-bold uppercase mb-1">Kết Quả</span>
+                                                    <h2 className="text-[13px] sm:text-[14px] font-extrabold text-[#a91d1d] uppercase serif-title tracking-wide text-center">{mhBienNameFull}</h2>
+                                                    <BigHexagram lines={mhBienLines} className="w-10 sm:w-12 space-y-1 sm:space-y-1.5 my-1.5" lineClass="h-1 sm:h-1.5" />
+                                                    <div className="text-[8px] sm:text-[9px] space-y-0.5 text-center mt-1">
+                                                        <p>Thượng: <span className={`font-bold ${getElementColor(mhUpperBienQuai.element)}`}>{mhUpperBienQuai.name}</span></p>
+                                                        <p>Hạ: <span className={`font-bold ${getElementColor(mhLowerBienQuai.element)}`}>{mhLowerBienQuai.name}</span></p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div id="luan-giai-result-section" className="w-full mt-2">
+                                        <div className="flex items-center gap-2 mb-2 border-t border-amber-300 pt-3">
+                                            <i className="fa-solid fa-book-journal-whills text-[#a91d1d] text-xl"></i>
+                                            <h3 className="text-[14px] sm:text-[16px] font-bold text-[#8b1c1c] uppercase serif-title">Lời Bàn Luận Giải</h3>
+                                        </div>
+                                        
+                                        {luanGiaiText ? (
+                                            <RenderFormattedText text={luanGiaiText} />
+                                        ) : (
+                                            <div className="w-full p-4 border border-dashed border-amber-300 rounded bg-amber-50/50 text-gray-500 text-sm text-center italic min-h-[150px] flex items-center justify-center">
+                                                Hệ thống đang chờ lệnh... Bấm nút "Tự Động Luận Giải" để xem Dịch Sư phân tích chi tiết.
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-2 pt-1.5 border-t border-[#d4af37] flex flex-row justify-between items-end px-2 gap-2">
+                                        <div className="text-[7px] sm:text-[8px] font-medium space-y-0.5 document-text text-left">
+                                            <p className="text-[#a91d1d] font-bold mb-1">Hệ thống an sao Dịch Lý</p>
+                                            <p className="flex items-center gap-1.5 text-gray-800"><i className="fa-brands fa-facebook text-[#1877F2]"></i> <span>FB: Lê Hữu Hải</span></p>
+                                            <p className="flex items-center gap-1.5 text-gray-800"><i className="fa-solid fa-square-phone text-[#25D366]"></i> <span>Zalo: 0982076615</span></p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[6px] sm:text-[7px] text-amber-900 mb-[-2px] font-bold uppercase tracking-widest document-text">Luận giải bởi</p>
+                                            <h3 className="text-[18px] sm:text-[22px] rainbow-text signature-font font-bold">Thiên Cơ Tửu Khách</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MainApp />);
+    </script>
+</body>
+</html>
+
+
